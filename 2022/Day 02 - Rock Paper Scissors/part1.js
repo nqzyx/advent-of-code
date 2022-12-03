@@ -24,12 +24,11 @@ function playOutcome(theirChoice, myChoice) {
     return myChoiceValue + myOutcomeValue;
 }
 
-const myFinalScore = readFileSync('./input.txt', 'utf-8')
+console.log(readFileSync('./input.txt', 'utf-8')
     .split("\n")
     .reduce((score, play) => {
         const [ theirChoice, myChoice ] = play.split(" ");
 
         return (score + playOutcome(theirChoice, myChoice));
-    }, 0);
-
-console.log(`My final score: ${myFinalScore}`)
+    }, 0)
+);

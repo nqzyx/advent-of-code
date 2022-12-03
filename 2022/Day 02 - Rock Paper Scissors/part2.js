@@ -39,26 +39,10 @@ function getMyPlay(theirChoice, outcome) {
     }
 }
 
-// function scorePlay(theirChoice, outcome) {
-//     const myChoiceValue = plays[myChoice].value;
-//     let myOutcomeValue;
-//     if (plays[theirChoice] === plays[myChoice]) {
-//         myOutcomeValue = 3
-//     } else if (plays[myChoices[myChoice]].beats === choices[theirChoice]) {
-//         myOutcomeValue = 6
-//     } else if (plays[choices[theirChoice]].beats === myChoices[myChoice]) {
-//         myOutcomeValue = 0
-//     } else {
-//         throw new Error(`Unknown Outcome - TheirChoice: ${theirChoice}, MyChoice: ${myChoice}`)
-//     }
-//     return myChoiceValue + myOutcomeValue;
-// }
-
-const myFinalScore = readFileSync('./input.txt', 'utf-8')
+console.log(readFileSync('./input.txt', 'utf-8')
     .split("\n")
     .reduce((score, play) => {
         const [ theirChoice, outcome ] = play.split(" ");
         return (score + getMyPlay(theirChoice, outcome).value + outcomes[outcome].value);
-    }, 0);
-
-console.log(`My final score: ${myFinalScore}`)
+    }, 0)
+);
