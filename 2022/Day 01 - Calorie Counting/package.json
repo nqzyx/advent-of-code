@@ -1,0 +1,31 @@
+{
+  "name": "aoc-2022-01-calorie-counting",
+  "version": "1.0.0",
+  "description": "https://adventofcode.com/2022 - Day 1: Calorie Counting",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nqzyx/advent-of-code.git"
+  },
+  "keywords": [
+    "AdventOfCode",
+    "AoC",
+    "2022"
+  ],
+  "author": "nqZyx@nqZyx.xyz",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/nqzyx/advent-of-code/issues"
+  },
+  "homepage": "https://github.com/nqzyx/advent-of-code#readme",
+  "devDependencies": {
+    "eslint": "^8.29.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
