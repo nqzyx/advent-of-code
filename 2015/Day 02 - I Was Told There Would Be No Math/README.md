@@ -11,7 +11,7 @@ For example:
 
 All numbers in the elves' list are in feet. **_How many total square feet of wrapping paper should they order?_**
 
-# --- Part Two ---
+## --- Part Two ---
 
 The elves are also running low on ribbon. Ribbon is all the same width, so they only have to worry about the length they need to order, which they would again like to be exact.
 

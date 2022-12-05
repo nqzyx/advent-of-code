@@ -43,5 +43,5 @@ y: 456
 
 In little Bobby's kit's instructions booklet (provided as your puzzle input), **what signal is ultimately provided to wire a?**
 
-## --- Part Two ---
+### --- Part Two ---
 
