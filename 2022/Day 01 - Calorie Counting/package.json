@@ -1,10 +1,13 @@
 {
-  "name": "aoc-2022-01-calorie-counting",
+  "name": "aoc-2022-day-01",
   "version": "1.0.0",
-  "description": "https://adventofcode.com/2022 - Day 1: Calorie Counting",
-  "main": "app.js",
+  "description": "AdventOfCode 2022 Day 1: Calorie Counting",
+  "main": "part1.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run part1 && npm run part2",
+    "part1": "echo 'Part 1 Answer: ' && node part1.js",
+    "part2": "echo 'Part 2 Answer: ' && node part2.js"
   },
   "repository": {
     "type": "git",
@@ -13,7 +16,8 @@
   "keywords": [
     "AdventOfCode",
     "AoC",
-    "2022"
+    "2022",
+    "Day 1"
   ],
   "author": "nqZyx@nqZyx.xyz",
   "license": "UNLICENSED",
