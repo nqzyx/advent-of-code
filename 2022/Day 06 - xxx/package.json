@@ -1,0 +1,35 @@
+{
+  "name": "aoc-2022-day-06",
+  "version": "1.0.0",
+  "description": "AdventOfCode 2022 Day 6: xxx",
+  "main": "part1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run part1 && npm run part2",
+    "part1": "echo 'Part 1 Answer: ' && node part1.js",
+    "part2": "echo 'Part 2 Answer: ' && node part2.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nqzyx/advent-of-code.git"
+  },
+  "keywords": [
+    "AdventOfCode",
+    "AoC",
+    "2022",
+    "Day 6"
+  ],
+  "author": "nqZyx@nqZyx.xyz",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/nqzyx/advent-of-code/issues"
+  },
+  "homepage": "https://github.com/nqzyx/advent-of-code#readme",
+  "devDependencies": {
+    "eslint": "^8.29.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
