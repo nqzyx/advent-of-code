@@ -1,7 +1,7 @@
 {
   "name": "aoc-2022-day-06",
   "version": "1.0.0",
-  "description": "AdventOfCode 2022 Day 6: xxx",
+  "description": "AdventOfCode 2022 Day 6: Tuning Trouble",
   "main": "part1.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
