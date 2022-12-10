@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "AdventOfCode 2022 Day 8: xxx",
   "main": "part1.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run part1 && npm run part2",
@@ -31,5 +32,8 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1"
+  },
+  "dependencies": {
+    "mathjs": "^11.5.0"
   }
 }
