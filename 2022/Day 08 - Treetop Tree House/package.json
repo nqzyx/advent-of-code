@@ -1,7 +1,7 @@
 {
   "name": "aoc-2022-day-08",
   "version": "1.0.0",
-  "description": "AdventOfCode 2022 Day 8: xxx",
+  "description": "AdventOfCode 2022 Day 8: Treetop Tree House",
   "main": "part1.js",
   "type": "module",
   "scripts": {

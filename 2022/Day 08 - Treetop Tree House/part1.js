@@ -1,4 +1,4 @@
-// AoC 2022 Day 08 - xxx - Part 1
+// AoC 2022 Day 08 - Treetop Tree House - Part 1
 
 // const { readFileSync } = require('fs')
 import { readFileSync } from 'fs'
