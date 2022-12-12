@@ -1,6 +1,6 @@
-# advent-of-code
+# [Advent of Code (AoC)](https://adventofcode.com)
 
-This repository contains my solutions to [Advent Of Code](https://adventofcode.com) (AoC) challenges. I doubt I will ever be anywhere near the top 100, but I am doing this for fun and to learn. I do compare my solutions with others' solutions, but only after I have solved the problem myself and only to learn from their techniques. I am definitely not trying to copy anyone's solutions.
+This repository contains my solutions to AoC challenges. I doubt I will ever be anywhere near the top 100, especially now that ChatGPT and other AI tools are around. However, I am doing this for fun and to learn. I do compare my solutions with others' solutions, but only after I have solved the dproblem myself and only to learn from their techniques. I am definitely not copying solutions from anyone.
 
 ## How did I get started with AoC? 
 
