@@ -6,7 +6,7 @@ This repository contains my solutions to AoC challenges. I doubt I will ever be 
 
 If you have read [About Me 🚫 (TL;DR; strongly discouraged!)](https://github.com/nqzyx/nqzyx/ABOUTME.md), you will know that I am an old guy... a fossil... a relic. You also may remember that I have six adult children, four of whom are software developers.
 
-In earliy November 2022, While visiting with two of my software-developing kiddos, the conversation turned to what we do -- as it inevitably does. After a few minutes, one (or both?) of them suggested I join them and their siblings for this year's AoC. Having never even heard of AoC, I had a few questions -- which they answered immediately. I was instantly intrigued by the idea and decided to take them up on their offer. 
+In earliy November 2022, While visiting with two of my software-developing progeny, the conversation turned to what we do -- as it inevitably does. After a few minutes, one (or both?) of them suggested I join them and their siblings for this year's AoC. Having never even heard of AoC, I had a few questions -- which they answered immediately. I was instantly intrigued by the idea and decided to take them up on their offer. 
 
 ### 03-Dec-2022
 
