@@ -1,7 +1,7 @@
 {
   "name": "aoc-2022-day-12",
   "version": "1.0.0",
-  "description": "AdventOfCode 2022 Day 12: xxx",
+  "description": "AdventOfCode 2022 Day 12: Hill Climbing Algorithm",
   "main": "part1.js",
   "type": "module",
   "scripts": {
@@ -34,6 +34,7 @@
     "eslint-plugin-promise": "^6.1.1"
   },
   "dependencies": {
+    "dijkstrajs": "^1.0.2",
     "mathjs": "^11.5.0"
   }
 }
