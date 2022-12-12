@@ -8,11 +8,9 @@ If you have read [About Me](https://github.com/nqzyx/nqzyx/ABOUTME.md) -- which 
 
 In earliy November 2022, While visiting with two of my software-developing kiddos, the conversation turned to what we do -- as it inevitably does. After a few minutes, one (or both?) of them suggested I join them and their siblings for this year's AoC. Having never even heard of AoC, I had a few questions -- which they answered immediately. I was instantly intrigued by the idea and decided to take them up on their offer. 
 
-## 2022
-
 ### 03-Dec-2022
 
-Today, after 3 days of participation, I am hooked! Oh... and I am currently at the top of our Private Leaderboard! (We will see how long that lasts...)
+Today, after 3 days of participation in AoC's 2022 event, I am hooked! Oh... and I am currently at the top of our Private Leaderboard! (We will see how long that lasts...)
 
 I will try to add solutions for the current year's AoC event as I complete them. 
 
