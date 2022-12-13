@@ -1,7 +1,7 @@
 {
   "name": "aoc-2022-day-13",
   "version": "1.0.0",
-  "description": "AdventOfCode 2022 Day 13: ",
+  "description": "AdventOfCode 2022 Day 13: Distress Signal",
   "main": "part1.js",
   "type": "module",
   "scripts": {
@@ -34,6 +34,7 @@
     "eslint-plugin-promise": "^6.1.1"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "mathjs": "^11.5.0"
   }
 }
