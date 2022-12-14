@@ -1,0 +1,217 @@
+{
+  "members": {
+    "1655063": {
+      "global_score": 0,
+      "last_star_ts": 0,
+      "name": "shaypepper",
+      "stars": 0,
+      "completion_day_level": {},
+      "id": 1655063,
+      "local_score": 0
+    },
+    "2308529": {
+      "stars": 26,
+      "name": "nqzyx",
+      "global_score": 0,
+      "last_star_ts": 1670946437,
+      "local_score": 142,
+      "id": 2308529,
+      "completion_day_level": {
+        "4": {
+          "2": { "star_index": 824679, "get_star_ts": 1670163060 },
+          "1": { "star_index": 820486, "get_star_ts": 1670162041 }
+        },
+        "3": {
+          "1": { "star_index": 480172, "get_star_ts": 1670061261 },
+          "2": { "star_index": 492989, "get_star_ts": 1670064262 }
+        },
+        "8": {
+          "1": { "star_index": 1858910, "get_star_ts": 1670498215 },
+          "2": { "star_index": 2172692, "get_star_ts": 1670647738 }
+        },
+        "10": {
+          "1": { "get_star_ts": 1670657621, "star_index": 2204699 },
+          "2": { "star_index": 2212686, "get_star_ts": 1670661387 }
+        },
+        "11": {
+          "1": { "star_index": 2451159, "get_star_ts": 1670779811 },
+          "2": { "get_star_ts": 1670795740, "star_index": 2486970 }
+        },
+        "7": {
+          "2": { "star_index": 1637739, "get_star_ts": 1670414222 },
+          "1": { "get_star_ts": 1670413077, "star_index": 1634805 }
+        },
+        "6": {
+          "2": { "star_index": 1311635, "get_star_ts": 1670308818 },
+          "1": { "get_star_ts": 1670307775, "star_index": 1306907 }
+        },
+        "12": {
+          "2": { "get_star_ts": 1670840101, "star_index": 2554557 },
+          "1": { "get_star_ts": 1670838354, "star_index": 2551242 }
+        },
+        "1": {
+          "1": { "star_index": 73470, "get_star_ts": 1669943733 },
+          "2": { "star_index": 75767, "get_star_ts": 1669945532 }
+        },
+        "2": {
+          "1": { "get_star_ts": 1669979914, "star_index": 220725 },
+          "2": { "get_star_ts": 1669983923, "star_index": 236460 }
+        },
+        "5": {
+          "1": { "star_index": 988828, "get_star_ts": 1670220965 },
+          "2": { "get_star_ts": 1670221212, "star_index": 990082 }
+        },
+        "13": {
+          "1": { "star_index": 2724457, "get_star_ts": 1670943528 },
+          "2": { "star_index": 2729428, "get_star_ts": 1670946437 }
+        },
+        "9": {
+          "2": { "star_index": 2229712, "get_star_ts": 1670668158 },
+          "1": { "get_star_ts": 1670666375, "star_index": 2225026 }
+        }
+      }
+    },
+    "140567": {
+      "id": 140567,
+      "completion_day_level": {
+        "7": {
+          "2": { "get_star_ts": 1670826006, "star_index": 2528112 },
+          "1": { "star_index": 2528083, "get_star_ts": 1670825994 }
+        },
+        "11": {
+          "2": { "get_star_ts": 1670745059, "star_index": 2375018 },
+          "1": { "get_star_ts": 1670741274, "star_index": 2368327 }
+        },
+        "12": {
+          "2": { "star_index": 2527845, "get_star_ts": 1670825879 },
+          "1": { "star_index": 2527756, "get_star_ts": 1670825841 }
+        },
+        "6": {
+          "1": { "get_star_ts": 1670747502, "star_index": 2379106 },
+          "2": { "star_index": 2379242, "get_star_ts": 1670747582 }
+        },
+        "8": {
+          "1": { "star_index": 2528631, "get_star_ts": 1670826242 },
+          "2": { "get_star_ts": 1670826268, "star_index": 2528691 }
+        },
+        "10": {
+          "1": { "get_star_ts": 1670724581, "star_index": 2343028 },
+          "2": { "get_star_ts": 1670725294, "star_index": 2343569 }
+        },
+        "3": {
+          "1": { "get_star_ts": 1670120117, "star_index": 659289 },
+          "2": { "star_index": 660862, "get_star_ts": 1670121577 }
+        },
+        "4": {
+          "1": { "star_index": 688032, "get_star_ts": 1670131431 },
+          "2": { "get_star_ts": 1670131868, "star_index": 691928 }
+        },
+        "2": {
+          "1": { "star_index": 655179, "get_star_ts": 1670116583 },
+          "2": { "star_index": 657019, "get_star_ts": 1670118171 }
+        },
+        "5": {
+          "1": { "get_star_ts": 1670746550, "star_index": 2377548 },
+          "2": { "star_index": 2377592, "get_star_ts": 1670746571 }
+        },
+        "1": {
+          "1": { "star_index": 41196, "get_star_ts": 1669929274 },
+          "2": { "get_star_ts": 1669929484, "star_index": 41858 }
+        }
+      },
+      "local_score": 105,
+      "global_score": 0,
+      "last_star_ts": 1670826268,
+      "name": "marshall",
+      "stars": 22
+    },
+    "832742": {
+      "id": 832742,
+      "completion_day_level": {
+        "1": {
+          "1": { "star_index": 0, "get_star_ts": 1669916891 },
+          "2": { "get_star_ts": 1669916986, "star_index": 338 }
+        },
+        "2": { "1": { "get_star_ts": 1669996994, "star_index": 292000 } }
+      },
+      "local_score": 17,
+      "last_star_ts": 1669996994,
+      "global_score": 0,
+      "name": "Shay Culpepper",
+      "stars": 3
+    },
+    "1654431": {
+      "local_score": 0,
+      "id": 1654431,
+      "completion_day_level": {},
+      "stars": 0,
+      "name": "Ryan Culpepper",
+      "last_star_ts": 0,
+      "global_score": 0
+    },
+    "1655700": {
+      "local_score": 119,
+      "completion_day_level": {
+        "10": {
+          "2": { "get_star_ts": 1670859670, "star_index": 2590614 },
+          "1": { "get_star_ts": 1670857706, "star_index": 2586704 }
+        },
+        "8": {
+          "1": { "get_star_ts": 1670517019, "star_index": 1910822 },
+          "2": { "get_star_ts": 1670532786, "star_index": 1951906 }
+        },
+        "4": {
+          "2": { "get_star_ts": 1670272527, "star_index": 1196053 },
+          "1": { "get_star_ts": 1670272344, "star_index": 1195332 }
+        },
+        "3": {
+          "1": { "get_star_ts": 1670270764, "star_index": 1189082 },
+          "2": { "get_star_ts": 1670271534, "star_index": 1192124 }
+        },
+        "7": {
+          "1": { "get_star_ts": 1670430455, "star_index": 1683197 },
+          "2": { "get_star_ts": 1670431273, "star_index": 1685560 }
+        },
+        "11": {
+          "1": { "get_star_ts": 1670862327, "star_index": 2595828 },
+          "2": { "get_star_ts": 1670877858, "star_index": 2625901 }
+        },
+        "12": {
+          "2": { "get_star_ts": 1670875447, "star_index": 2620959 },
+          "1": { "star_index": 2619361, "get_star_ts": 1670874681 }
+        },
+        "6": {
+          "2": { "star_index": 1449378, "get_star_ts": 1670341187 },
+          "1": { "get_star_ts": 1670341089, "star_index": 1449040 }
+        },
+        "2": {
+          "1": { "star_index": 340672, "get_star_ts": 1670010899 },
+          "2": { "star_index": 341854, "get_star_ts": 1670011284 }
+        },
+        "5": {
+          "1": { "star_index": 1199726, "get_star_ts": 1670273483 },
+          "2": { "get_star_ts": 1670273685, "star_index": 1200501 }
+        },
+        "13": {
+          "2": { "get_star_ts": 1670945779, "star_index": 2728309 },
+          "1": { "star_index": 2727318, "get_star_ts": 1670945238 }
+        },
+        "1": {
+          "2": { "get_star_ts": 1670009987, "star_index": 337855 },
+          "1": { "star_index": 337345, "get_star_ts": 1670009826 }
+        },
+        "9": {
+          "2": { "star_index": 2103059, "get_star_ts": 1670602589 },
+          "1": { "get_star_ts": 1670602168, "star_index": 2102039 }
+        }
+      },
+      "id": 1655700,
+      "stars": 26,
+      "name": "pepperology",
+      "global_score": 0,
+      "last_star_ts": 1670945779
+    }
+  },
+  "owner_id": 140567,
+  "event": "2022"
+}
