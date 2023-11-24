@@ -1,8 +1,9 @@
 {
-  "name": "aoc-2015-day-08",
+  "name": "aoc-2022-day-15",
   "version": "1.0.0",
-  "description": "AdventOfCode 2015 Day 8: Matchsticks",
+  "description": "AdventOfCode 2022 Day 15: Beacon Exclusion Zone}",
   "main": "part1.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run part1 && npm run part2",
@@ -16,8 +17,8 @@
   "keywords": [
     "AdventOfCode",
     "AoC",
-    "2015",
-    "Day 8"
+    "2022",
+    "Day 15"
   ],
   "author": "nqZyx@nqZyx.xyz",
   "license": "UNLICENSED",
@@ -34,6 +35,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "readline-sync": "^1.4.10"
+    "mathjs": "^11.5.0"
   }
 }

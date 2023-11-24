@@ -2,42 +2,54 @@
 
 const { readFileSync } = require('fs')
 
-const escChar = '\\'
-const dQuote = '"'
-const lcX = 'x'
-
-console.log(
+const initialInput =
   readFileSync('input.txt', 'utf8')
     .split('\n')
-    .map((line) => {
-      console.log('Line', line, '\nlength', line.length)
-      const ol = line.length // original string length
-      let [, s] = line.match(/^"(.*)"$/)
-      s.replace(/""/, '')
-      return (() => {
-        let ps, pe, rs, sl, sr
-        while ((ps = s.indexOf(escChar)) !== -1) {
-          sl = s.substring(0, ps + 1)
-          switch (s[ps + 1]) {
-            case dQuote:
-              pe = ps + 2
-              rs = dQuote
-              break
-            case lcX:
-              pe = ps + 4
-              rs = String.fromCharCode(parseInt(s.substring(ps, pe), 16))
-              break
-            default:
-              pe = ps
-              rs = ''
-              break
-          }
-          sr = pe < s.length ? s.substring(pe) : ''
-          s = sl + rs + sr
-        }
-        const retVal = { ol, s, cl: s.length, diff: ol - s.length }
-        console.log(JSON.stringify(retVal))
-        return retVal
-      })()
-    })
-)
+
+const unquotedInput =
+  initialInput
+    .map((ol, li, f) =>
+      // Remove leading and trailing quotes
+      ol.replace(/^"(.*)"$/, '$1')
+    )
+
+const backSlashedInput =
+  unquotedInput
+    .map((ol, li, f) =>
+      // Escaped backslash (\\)
+      ol.replace(/\\\\/g, '\\')
+    )
+
+const deHexedInput =
+  backSlashedInput
+    .map((ol, li, f) =>
+      // Escaped hex char code (\x20)
+      ol.replace(/\\x([0-9A-Fa-f]{2})/g, (m, hex) =>
+        String.fromCharCode(parseInt(hex, 16))
+      )
+    )
+
+const quotedInput =
+  deHexedInput
+    .map((ol, li, f) =>
+      // Escaped quote (\")
+      ol.replace(/\\"/g, '"')
+    )
+
+const parsedInput = quotedInput.map((nl, li, f) => ({
+  i: li,
+  ol: initialInput[li],
+  olLen: initialInput[li].length,
+  nl,
+  nlLen: nl.length,
+  diff: initialInput[li].length - nl.length
+}))
+
+const answer =
+  parsedInput
+    .reduce(
+      (td, o) => td + o.diff,
+      0
+    )
+
+console.log(answer)
