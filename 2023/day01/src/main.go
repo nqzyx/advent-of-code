@@ -14,7 +14,29 @@ func printErr(err error) {
 	os.Exit(1)
 }
 
-func mapToNums(strs []string) (nums []int) {
+func getArgs(partName string) (dataPath string) {
+	dataFolder := "../data"
+	dataPath = path.Join(dataFolder, "input/data.txt")
+	for _, arg := range os.Args[1:] {
+		if arg == "-e" {
+			dataPath = path.Join(dataFolder, "example", partName, "data.txt")
+			break;
+		}
+	}
+	return
+}
+
+func getInput(partName string) (input []string) {
+	dataPath := getArgs(partName)
+	rawInput, err := os.ReadFile(dataPath)
+	if err != nil {
+		printErr(err)
+	}
+	input = strings.Split(string(rawInput), "\n")
+	return
+}
+
+func mapInputToNums(strs []string) (nums []int) {
 	for _, str := range strs {
 		notDigits, err := regexp.Compile("[^0-9]")
 		if err != nil {
@@ -27,26 +49,10 @@ func mapToNums(strs []string) (nums []int) {
 	return
 }
 
-func getArgs() (dataPath string) {
-	dataFolder := "../data"
-	dataPath = path.Join(dataFolder, "input/data.txt")
-	for _, arg := range os.Args[1:] {
-		if arg == "-e" {
-			dataPath = path.Join(dataFolder, "example/data.txt")
-			break;
-		}
-	}
-	return
-}
-
 func partOne() {
-	dataPath := getArgs()
-	rawInput, err := os.ReadFile(dataPath)
-	if err != nil {
-		printErr(err)
-	}
-	inputArray := strings.Split(string(rawInput), "\n")
-	nums := mapToNums(inputArray)
+	input := getInput("part1")
+
+	nums := mapInputToNums(input)
 
 	var total int
 	for _, n := range nums {
