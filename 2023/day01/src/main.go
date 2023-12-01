@@ -36,33 +36,31 @@ func getInput(partName string) (input []string) {
 	return
 }
 
-var digitNamesToValues map[string]int64 = map[string]int64 { "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9 }
-var digitNameReplacements map[string]string = map[string]string {  "one": "o1e", "two": "t2o", "three": "th3ee", "five": "fi5ve", "seven": "se7en", "eight": "ei8ht", "nine": "ni9ne"}
-
-var digitNamesRegexpString string = "(one|two|three|four|five|six|seven|eight|nine)"
-var digitNamesRegexp regexp.Regexp = *regexp.MustCompile(digitNamesRegexpString)
-
-var digitsRegexpString string = "([1-9])"
-var digitsRegexp regexp.Regexp = *regexp.MustCompile(digitsRegexpString)
+var digitNamesToValues map[string]int64 = map[string]int64 { 
+	"one": 1, 
+	"two": 2, 
+	"three": 3, 
+	"four": 4, 
+	"five": 5, 
+	"six": 6, 
+	"seven": 7, 
+	"eight": 8, 
+	"nine": 9,
+}
+var digitNameReplacements map[string]string = map[string]string { 
+	"one": "o1e", 
+	"two": "t2o", 
+	"three": "t3e", 
+	"four": "f4r",
+	"five": "f5e", 
+	"six": "s6x",
+	"seven": "s7n", 
+	"eight": "e8t", 
+	"nine": "n9e",
+}
 
 var notDigitsRegexpString string = "[^1-9]"
 var notDigitsRegexp regexp.Regexp = *regexp.MustCompile(notDigitsRegexpString)
-
-func replaceDigitName (str string) (string) {
-	return digitNameReplacements[str]
-}		
-
-func convertNamesToDigits (str string) (result string) {
-	lastString := str
-	for {
-		thisString := digitNamesRegexp.ReplaceAllStringFunc(lastString,replaceDigitName)
-		if thisString == lastString {
-			result = lastString
-			return
-		}
-		lastString = thisString
-	}
-}
 
 func mapInputToNumsByDigits(strs []string) (nums []int64) {
 	for _, str := range strs {
@@ -73,12 +71,44 @@ func mapInputToNumsByDigits(strs []string) (nums []int64) {
 	return
 }
 
-func mapInputToNumsByDigitsAndNames(strs []string) ([]int64) { 
-	var tmpStrs []string
-	for _, str := range strs {
-		tmpStrs = append(tmpStrs, convertNamesToDigits(str))
+func findNum(str string) (num int64, found bool) {
+	ch := str[:1]
+	if ch >= "0" && ch <= "9" {
+		num, _ = strconv.ParseInt(ch, 10, 64)
+		found = true
+		return
 	}
-	return mapInputToNumsByDigits(tmpStrs)
+
+	for name, value := range digitNamesToValues {
+		if strings.HasPrefix(str, name) {
+			num = value
+			found = true
+			return
+		}
+	}
+	return 0, false
+}
+
+func mapInputToNumsBySubstr(strs []string) (nums []int64) {
+	for _, str := range strs {
+		var a, b int64
+		var found bool
+		// Find first num
+		for idx := range str {
+			if a, found = findNum(str[idx:]); found {
+				break
+			}
+		}
+
+		// Find last num by searching in reverse
+		for idx := len(str) - 1; idx >= 0; idx-- {
+			if b, found = findNum(str[idx:]); found {
+				break
+			}
+		}
+		nums = append(nums, (a * 10) + b)
+	}
+	return
 }
 
 func partOne() (total int64) {
@@ -95,8 +125,7 @@ func partOne() (total int64) {
 
 func partTwo() (total int64) {
 	input := getInput("part2")
-	nums := mapInputToNumsByDigitsAndNames(input)
-
+	nums := mapInputToNumsBySubstr(input)
 	for _, n := range nums {
 		total += int64(n)
 	}
@@ -104,8 +133,6 @@ func partTwo() (total int64) {
 }
 
 func main() {
-	// s := "oneighthreeightwonesevenine"
-	// fmt.Printf("{\n\tstring:\t%v,\n\tresult:\t%v\n}", s, convertNamesToDigits(s))
 	fmt.Printf("Part 1 Answer: %v\n", partOne())
 	fmt.Printf("Part 2 Answer: %v\n", partTwo())
 }

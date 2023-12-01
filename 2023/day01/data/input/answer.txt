@@ -1,2 +1,3 @@
-53386: too low
-53352: too high
+53312, correct
+53352, high
+53386, high
