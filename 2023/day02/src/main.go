@@ -44,7 +44,7 @@ func getBoard(partName string) (board Board) {
 			panic(fmt.Sprintf("Game number not found (%v)", gameData))
 		}
 		drawsData := strings.Split(gameParts[1], ";")
-		thisGame := make(Game, 0, 0)
+		thisGame := make(Game, 0)
 		for _, drawData := range drawsData {
 			thisDraw := make(Draw)
 			cubesData := strings.Split(drawData, ",")
