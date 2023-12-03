@@ -4,4 +4,5 @@ use (
 	./day01/src
 	./day02/src
 	./day03/src
+	./day04/src
 )
