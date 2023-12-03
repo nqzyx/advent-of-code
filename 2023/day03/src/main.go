@@ -37,14 +37,15 @@ func getSchematic(partName string) (schematic []string) {
 }
 
 var specialCharacterRegexpString = "[^0-9.]"
-var specialCharacterRegexp = regexp.MustCompile(specialCharacterRegexpString)
+var gearRegexpString = "\\*"
 
 type specialCharacterPosition struct {
 	row int
 	col int
 }
 
-func findAllSpecialCharacters(schematic []string) (specialCharacterPositions []specialCharacterPosition) {
+func findAllSpecialCharacters(schematic []string, searchFor string) (specialCharacterPositions []specialCharacterPosition) {
+	specialCharacterRegexp := regexp.MustCompile(searchFor)
 	for r, row := range schematic {
 		for _, position := range specialCharacterRegexp.FindAllStringIndex(row, -1) {
 			specialCharacterPositions = append(
@@ -91,19 +92,38 @@ func findAllSerialNumbers(schematic []string) (serialNumberPositions []serialNum
 }
 
 func findTaggedSerialNumbers(schematic []string) (serialNumbers []int) {
-	specialCharacterPositions := findAllSpecialCharacters(schematic)
+	specialCharacterPositions := findAllSpecialCharacters(schematic, specialCharacterRegexpString)
 	serialNumberPositions := findAllSerialNumbers(schematic)
 
 	for _, serialNumberPosition := range serialNumberPositions {
-		for _, specialCharacterPositions := range specialCharacterPositions {
-			isTagged := specialCharacterPositions.row >= serialNumberPosition.row-1 &&
-				specialCharacterPositions.row <= serialNumberPosition.row+1 &&
-				specialCharacterPositions.col >= serialNumberPosition.startCol-1 &&
-				specialCharacterPositions.col <= serialNumberPosition.endCol+1
+		for _, specialCharacterPosition := range specialCharacterPositions {
+			isTagged := specialCharacterPosition.row >= serialNumberPosition.row-1 &&
+				specialCharacterPosition.row <= serialNumberPosition.row+1 &&
+				specialCharacterPosition.col >= serialNumberPosition.startCol-1 &&
+				specialCharacterPosition.col <= serialNumberPosition.endCol+1
 
 			if isTagged {
 				serialNumbers = append(serialNumbers, serialNumberPosition.value)
 			}
+		}
+	}
+	return
+}
+
+func findGearRatios(schematic []string) (gearRatios []int) {
+	for _, gearPosition := range findAllSpecialCharacters(schematic, gearRegexpString) {
+		var gearSerialNumbers []int
+		for _, serialNumber := range findAllSerialNumbers(schematic) {
+			isAdjacentToGear := gearPosition.row >= serialNumber.row-1 &&
+				gearPosition.row <= serialNumber.row+1 &&
+				gearPosition.col >= serialNumber.startCol-1 &&
+				gearPosition.col <= serialNumber.endCol+1
+			if isAdjacentToGear {
+				gearSerialNumbers = append(gearSerialNumbers, serialNumber.value)
+			}
+		}
+		if len(gearSerialNumbers) == 2 {
+			gearRatios = append(gearRatios, gearSerialNumbers[0]*gearSerialNumbers[1])
 		}
 	}
 	return
@@ -118,14 +138,18 @@ func partOne() (answer int) {
 	return
 }
 
-// func partTwo() (answer int) {
-// 	input := getInput("part2")
+func partTwo() (answer int) {
+	schematic := getSchematic("part2")
+	gearRatios := findGearRatios(schematic)
 
-// 	answer = len(input)
-// 	return
-// }
+	fmt.Println(gearRatios)
+	for _, gearRatio := range gearRatios {
+		answer += gearRatio
+	}
+	return
+}
 
 func main() {
 	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	//fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	fmt.Printf("Part 2 Answer: %v\n", partTwo())
 }
