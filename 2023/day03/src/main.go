@@ -142,7 +142,6 @@ func partTwo() (answer int) {
 	schematic := getSchematic("part2")
 	gearRatios := findGearRatios(schematic)
 
-	fmt.Println(gearRatios)
 	for _, gearRatio := range gearRatios {
 		answer += gearRatio
 	}
