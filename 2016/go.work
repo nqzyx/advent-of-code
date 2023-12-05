@@ -2,4 +2,5 @@ go 1.21.3
 
 use (
 	./day01/src
+	./day02/src
 )
