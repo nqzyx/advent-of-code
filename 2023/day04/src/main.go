@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"path"
 	"strconv"
@@ -34,7 +35,7 @@ func getInputData() (inputData InputData) {
 	if err != nil {
 		printErr(err)
 	}
-	inputData = strings.Split(strings.Trim(strings.ReplaceAll(string(inputDataAsByteArray), "Card ", ""), " "), "\n")
+	inputData = strings.Split(strings.TrimSpace(strings.ReplaceAll(string(inputDataAsByteArray), "Card ", "")), "\n")
 	return
 }
 
@@ -42,9 +43,10 @@ type String string
 type StringArray []string
 type IntArray []int
 type Card struct {
-	score          int
-	winningNumbers IntArray
-	theNumbers     IntArray
+	winningNumbers   IntArray
+	candidateNumbers IntArray
+	winners          int // how many candidates match winners
+	count            int // how many instances of this card
 }
 type Cards map[int]Card
 
@@ -67,7 +69,7 @@ func (s String) ToIntArray(splitOn string) (result IntArray) {
 	return
 }
 
-func (ia IntArray) Contains(value int) (result bool) {
+func (ia IntArray) contains(value int) (result bool) {
 	result = false
 	for _, i := range ia {
 		if i == value {
@@ -78,20 +80,34 @@ func (ia IntArray) Contains(value int) (result bool) {
 	return
 }
 
-func (c Card) CalculateScore() (result int) {
-	for _, n := range c.theNumbers {
-		if c.winningNumbers.Contains(n) {
-			if result == 0 {
-				result = 1
-			} else {
-				result *= 2
-			}
+func (c Card) getWinners() (result int) {
+	for _, candidate := range c.candidateNumbers {
+		if c.winningNumbers.contains(candidate) {
+			result += 1
 		}
 	}
 	return
 }
 
-func (input InputData) ToCards() (cards Cards) {
+func (c Card) String() (result string) {
+	format := "{\n\twinningNumbers: %v,\n\tcandidateNumbers: %v,\n\twinners: %v\n\tcount: %v\n}"
+	result = fmt.Sprintf(
+		format,
+		c.winningNumbers,
+		c.candidateNumbers,
+		c.winners,
+		c.count,
+	)
+	return
+}
+
+func (c Card) score() (result int) {
+	if c.winners > 0 {
+		result = int(math.Pow(float64(2), float64(c.winners-1)))
+	}
+	return
+}
+func (input InputData) toCards() (cards Cards) {
 	cards = make(Cards)
 	var thisCardData []string
 	for thisCardIndex, thisCardString := range input {
@@ -103,30 +119,42 @@ func (input InputData) ToCards() (cards Cards) {
 		}
 		thisCardData = strings.Split(thisCardData[1], "|")
 		thisCard := Card{
-			score:          0,
-			winningNumbers: String(thisCardData[0]).ToIntArray(" "),
-			theNumbers:     String(thisCardData[1]).ToIntArray(" "),
+			winningNumbers:   String(thisCardData[0]).ToIntArray(" "),
+			candidateNumbers: String(thisCardData[1]).ToIntArray(" "),
+			count:            1,
 		}
-		thisCard.score = thisCard.CalculateScore()
+		thisCard.winners = thisCard.getWinners()
 		cards[thisCardNumber] = thisCard
+	}
+	// fmt.Println("len(cards)", len(cards))
+	for c := 1; c <= len(cards); c++ {
+		thisCard := cards[c]
+		// fmt.Printf("thisCard(index=%v): %v\n", c, thisCard)
+		for i := 1; i <= thisCard.winners; i++ {
+			if nextCard, ok := cards[c+i]; ok {
+				nextCard.count += thisCard.count
+				cards[c+i] = nextCard
+				// fmt.Printf("nextCard(index=%v): %v\n", c+i, nextCard)
+			}
+		}
+		// fmt.Println(cards)
 	}
 	return
 }
 
 func partOne() (answer int) {
-	cards := getInputData().ToCards()
+	cards := getInputData().toCards()
 	for _, c := range cards {
-		answer += c.score
+		answer += c.score()
 	}
 	return
 }
 
 func partTwo() (answer int) {
-	inputData := getInputData()
-
-	// Do the needful
-
-	answer = len(inputData)
+	cards := getInputData().toCards()
+	for _, c := range cards {
+		answer += c.count
+	}
 	return
 }
 
