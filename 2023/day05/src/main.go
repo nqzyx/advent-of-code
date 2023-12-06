@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 )
 
@@ -15,9 +16,10 @@ func printErr(err error) {
 func getArgs() (dataPath string) {
 	dataBaseFolder := "../data"
 	dataPath = path.Join(dataBaseFolder, "input", "data.txt")
-	for _, arg := range os.Args[1:] {
+	args := os.Args[1:]
+	for a, arg := range args {
 		if arg == "-e" {
-			dataPath = path.Join(dataBaseFolder, "example", "data.txt")
+			dataPath = path.Join(dataBaseFolder, "example", fmt.Sprintf("data%v.txt", args[a+1]))
 			break
 		}
 	}
@@ -30,14 +32,41 @@ func getInputData() (inputData []string) {
 	if err != nil {
 		printErr(err)
 	}
-	inputData = strings.Split(string(inputDataAsByteArray), "\n")
+	inputData = strings.Split(string(inputDataAsByteArray), "\n\n")
 	return
+}
+
+type GameData struct {
+	seeds   []int
+	xRefMap map[string]XRef
+}
+
+var digitsRegexp = regexp.MustCompile("([1-9][0-9]+)")
+
+func getSeedList(str string) []int {
+	strings.Trim()
+}
+
+func parseInputData(inputData []string) GameData {
+	gameData := new(GameData)
+	for _, data := range inputData {
+		switch true {
+		case strings.HasPrefix(data, "seeds:"):
+			gameData.seeds = getSeedList(data)
+		default:
+			gameData.addXrefMap(data)
+		}
+	}
+	return gameData
 }
 
 func partOne() (answer int) {
 	inputData := getInputData()
 
-	// Do the needful
+	fmt.Println(inputData)
+
+	xref := NewXRef("seed", "soil").AddXRefRange(5, 43, 49)
+	fmt.Println(xref)
 
 	answer = len(inputData)
 	return
