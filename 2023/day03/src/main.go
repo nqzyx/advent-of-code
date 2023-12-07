@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
@@ -8,11 +9,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-func printErr(err error) {
-	fmt.Println(err)
-	os.Exit(1)
-}
 
 func getArgs(partName string) (dataPath string) {
 	dataFolder := "../data"
@@ -30,7 +26,7 @@ func getSchematic(partName string) (schematic []string) {
 	dataPath := getArgs(partName)
 	rawInput, err := os.ReadFile(dataPath)
 	if err != nil {
-		printErr(err)
+		panic(err)
 	}
 	schematic = strings.Split(string(rawInput), "\n")
 	return
@@ -75,7 +71,7 @@ func findAllSerialNumbers(schematic []string) (serialNumberPositions []serialNum
 		for _, i := range serialNumberRegexp.FindAllStringIndex(row, -1) {
 			serialNumber, err := strconv.Atoi(row[i[0]:i[1]])
 			if err != nil {
-				printErr(err)
+				panic(err)
 			}
 			serialNumberPositions = append(
 				serialNumberPositions,
@@ -149,6 +145,15 @@ func partTwo() (answer int) {
 }
 
 func main() {
-	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	answers := map[string]int{
+		"Part1": partOne(),
+		"Part2": partTwo(),
+	}
+
+	jsonBytes, err := json.MarshalIndent(answers, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes))
 }
