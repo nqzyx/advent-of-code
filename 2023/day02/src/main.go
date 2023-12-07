@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
@@ -8,18 +9,13 @@ import (
 	"strings"
 )
 
-func printErr(err error) {
-	fmt.Println(err)
-	os.Exit(1)
-}
-
 func getArgs(partName string) (dataPath string) {
 	dataFolder := "../data"
 	dataPath = path.Join(dataFolder, "input/data.txt")
 	for _, arg := range os.Args[1:] {
 		if arg == "-e" {
 			dataPath = path.Join(dataFolder, "example", partName, "data.txt")
-			break;
+			break
 		}
 	}
 	return
@@ -34,7 +30,7 @@ func getBoard(partName string) (board Board) {
 	dataPath := getArgs(partName)
 	rawInput, err := os.ReadFile(dataPath)
 	if err != nil {
-		printErr(err)
+		panic(err)
 	}
 	boardData := strings.Split(string(rawInput), "\n")
 	for _, gameData := range boardData {
@@ -50,7 +46,6 @@ func getBoard(partName string) (board Board) {
 			cubesData := strings.Split(drawData, ",")
 			for _, cubeData := range cubesData {
 				cubeCountData := strings.Split(strings.Trim(cubeData, " "), " ")
-				// fmt.Println(cubeCountData)
 				cubeCountQty, _ := strconv.Atoi(cubeCountData[0])
 				cubeCountColor := cubeCountData[1]
 				thisDraw[cubeCountColor] = cubeCountQty
@@ -63,19 +58,19 @@ func getBoard(partName string) (board Board) {
 	return
 }
 
-var colors = []string { "red", "green", "blue" }
+var colors = []string{"red", "green", "blue"}
 
 func partOne() (total int) {
 	board := getBoard("part1")
-	limits := map[string]int {
-		"red": 12,
+	limits := map[string]int{
+		"red":   12,
 		"green": 13,
-		"blue": 14,
+		"blue":  14,
 	}
 
 	for g, game := range board {
 		possible := true
-		top:
+	top:
 		for _, draw := range game {
 			for _, color := range colors {
 				if draw[color] > limits[color] {
@@ -91,8 +86,6 @@ func partOne() (total int) {
 	return
 }
 
-
-
 func partTwo() (total int) {
 	board := getBoard("part2")
 	for _, game := range board {
@@ -102,7 +95,7 @@ func partTwo() (total int) {
 				if minCubesRequired[color] < draw[color] {
 					minCubesRequired[color] = draw[color]
 				}
- 			}
+			}
 		}
 		power := 1
 		for _, minQty := range minCubesRequired {
@@ -114,6 +107,15 @@ func partTwo() (total int) {
 }
 
 func main() {
-	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	answers := map[string]int{
+		"Part1": partOne(),
+		"Part2": partTwo(),
+	}
+
+	jsonBytes, err := json.MarshalIndent(answers, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes))
 }

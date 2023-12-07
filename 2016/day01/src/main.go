@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
 	"os"
@@ -8,11 +9,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-func printErr(err error) {
-	fmt.Println(err)
-	os.Exit(1)
-}
 
 func getArgs() (dataPath string) {
 	dataBaseFolder := "../data"
@@ -31,7 +27,7 @@ func getInputData() (inputData []string) {
 	dataPath := getArgs()
 	inputDataAsByteArray, err := os.ReadFile(dataPath)
 	if err != nil {
-		printErr(err)
+		panic(err)
 	}
 	inputDataAsString := strings.ReplaceAll(string(inputDataAsByteArray), " ", "")
 	inputData = strings.Split(inputDataAsString, ",")
@@ -163,6 +159,15 @@ func partTwo() (answer int) {
 }
 
 func main() {
-	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	answers := map[string]int{
+		"Part1": partOne(),
+		"Part2": partTwo(),
+	}
+
+	jsonBytes, err := json.MarshalIndent(answers, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes))
 }

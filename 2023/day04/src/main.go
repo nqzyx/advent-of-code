@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
 	"os"
@@ -8,11 +9,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-func printErr(err error) {
-	fmt.Println(err)
-	os.Exit(1)
-}
 
 func getArgs() (dataPath string) {
 	dataBaseFolder := "../data"
@@ -33,7 +29,7 @@ func getInputData() (inputData InputData) {
 	dataPath := getArgs()
 	inputDataAsByteArray, err := os.ReadFile(dataPath)
 	if err != nil {
-		printErr(err)
+		panic(err)
 	}
 	inputData = strings.Split(strings.TrimSpace(strings.ReplaceAll(string(inputDataAsByteArray), "Card ", "")), "\n")
 	return
@@ -61,8 +57,7 @@ func (s String) ToIntArray(splitOn string) (result IntArray) {
 	for thisIndex, thisString := range theseStrings {
 		thisValue, err := strconv.Atoi(thisString)
 		if err != nil {
-			fmt.Printf("thisIndex: %v, thisString: %v, this; %v", thisIndex, thisString, this)
-			printErr(err)
+			panic(err)
 		}
 		result[thisIndex] = thisValue
 	}
@@ -110,12 +105,11 @@ func (c Card) score() (result int) {
 func (input InputData) toCards() (cards Cards) {
 	cards = make(Cards)
 	var thisCardData []string
-	for thisCardIndex, thisCardString := range input {
+	for _, thisCardString := range input {
 		thisCardData = strings.Split(strings.TrimSpace(thisCardString), ":")
 		thisCardNumber, err := strconv.Atoi(thisCardData[0])
 		if err != nil {
-			fmt.Printf("thisCardIndex: %v, thisCardData[0]: %v, thisCardString: %v", thisCardIndex, thisCardData[0], thisCardString)
-			printErr(err)
+			panic(err)
 		}
 		thisCardData = strings.Split(thisCardData[1], "|")
 		thisCard := Card{
@@ -126,18 +120,14 @@ func (input InputData) toCards() (cards Cards) {
 		thisCard.winners = thisCard.getWinners()
 		cards[thisCardNumber] = thisCard
 	}
-	// fmt.Println("len(cards)", len(cards))
 	for c := 1; c <= len(cards); c++ {
 		thisCard := cards[c]
-		// fmt.Printf("thisCard(index=%v): %v\n", c, thisCard)
 		for i := 1; i <= thisCard.winners; i++ {
 			if nextCard, ok := cards[c+i]; ok {
 				nextCard.count += thisCard.count
 				cards[c+i] = nextCard
-				// fmt.Printf("nextCard(index=%v): %v\n", c+i, nextCard)
 			}
 		}
-		// fmt.Println(cards)
 	}
 	return
 }
@@ -159,6 +149,15 @@ func partTwo() (answer int) {
 }
 
 func main() {
-	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	answers := map[string]int{
+		"Part1": partOne(),
+		"Part2": partTwo(),
+	}
+
+	jsonBytes, err := json.MarshalIndent(answers, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes))
 }
