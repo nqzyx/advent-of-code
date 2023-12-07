@@ -1,22 +1,126 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/go
 {
-	"name": "Go",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/go:1-1-bookworm"
+  "name": "Go",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/go:1-1-bookworm",
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "go version",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "go version",
 
-	// Configure tool-specific properties.
-	// "customizations": {},
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        /*
+        	Golang
+        */
+        "filikos.awesome-go-vscode", // -------------- Awesome Golang VSCode Pack
+        /* 	Included Extensions
+			- "bierner.markdown-mermaid", // --------------- Markdown Preview Mermaid Support
+			- "eamodio.gitlens", // ------------------------ GitLens - Git supercharged
+			- "formulahendry.code-runner", // -------------- Code Runner
+			- "golang.go", // ------------------------------ Go
+			- "ms-vscode-remote.remote-containers", // ----- Dev Containers
+			- "ms-vscode-remote.remote-ssh", // ------------ Remote - SSH
+			- "ms-vscode-remote.remote-ssh-edit", // ------- Remote - SSH: Editing Configuration Files
+			- "ms-vscode-remote.remote-explorer", // ------- Remote Explorer
+			- "ms-vsliveshare.vsliveshare", // ------------- Live Share
+			- "premparihar.gotestexplorer", // ------------- Go Test Explorer
+			- "redhat.vscode-yaml", // --------------------- YAML
+			- "yzhang.markdown.all-in-one", // ------------- Markdown All in One
+			- "mhutchie.git-graph", // --------------------- Git Graph
+			- "johnpapa.vscode-peacock", // ---------------- Peacock
+			- "k--kato.intellij-idea-keybindings", // ------ IntelliJ IDEA Keybindings
+			- "eliverlara.andromeda", // ------------------- Andromeda
+			- "fehey.brackets-light-pro", // --------------- Brackets Light Pro
+			- "wraith13.zoombar-vscode", // ---------------- Zoom Bar
+			- "euskadi31.json-pretty-printer", // ---------- JSON Pretty Printer
+			- "awehook.vscode-blink-mind", // -------------- Vscode Blink Mind
+			- "maracko.json-to-go", // --------------------- JSON to Go
+			- "trybick.terminal-zoom", // ------------------ Terminal Zoom
+			- "josephcz.vscode-markdown-mindmap-preview", // Markdown Mind Map Preview
+		*/
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+        "766b.go-outliner", // ----------------------- Go Outliner
+        "honnamkuan.golang-snippets", // ------------- Golang Snippets
+        "msyrus.go-doc", // -------------------------- Go Doc
+        "quicktype.quicktype", // -------------------- Paste JSON as Code
+        "tooltitudeteam.tooltitude", // -------------- Tooltitude for Go (GoLang)
+        "windmilleng.vscode-go-autotest", // --------- Go Autotest
+        "yokoe.vscode-postfix-go", // ---------------- Golang postfix code completion
+
+        /*
+        	Markdown
+        */
+
+        "bierner.github-markdown-preview", // -------- GitHub Markdown Preview
+        /*	Included Extensions
+			- "bierner.markdown-preview-github-styles", // - Markdown Preview Github Styling
+			- "bierner.markdown-emoji", // ----------------- Markdown Emoji
+			- "bierner.markdown-checkbox", // -------------- Markdown Checkboxes
+			- "bierner.markdown-yaml-preamble", // --------- Markdown yaml preamble
+			- "bierner.markdown-footnotes", // ------------- Markdown Footnotes
+			- "bierner.markdown-mermaid", // --------------- Markdown Preview Mermaid Support
+		*/
+
+        "bierner.markdown-shiki", // ----------------- Markdown Preview VS Code Highlighting
+        "bierner.jsdoc-markdown-highlighting", // ---- JSDoc Markdown highlighting
+        "bierner.markdown-prism", // ----------------- Markdown Preview Prism Highlighting
+
+        /*
+			Environment
+        */
+
+        "biernier.emojisense", // -------------------- :emojisense
+        "editorconfig.editorconfig", // -------------- EditorConfig for VS Code
+
+        /*
+			Git and GitHub
+		*/
+
+        "vinirossa.vscode-gitandgithub-pack", // ----- Git & GitHub Extension Pack
+        /* 	Included Extensions
+			- "eamodio.gitlens", // ------------------------ GitLens - Git supercharged
+			- "donjayamanne.githistory", // ---------------- Git History
+			- "github.vscode-pull-request-github", // ------ GitHub Pull Requests and Issues
+			- "ziyasal.vscode-open-in-github", // ---------- Open in GitHub, Bitbucket, Gitlab, VisualStudio.com
+			- "mhutchie.git-graph", // --------------------- Git Graph
+			- "github.codepsaces", // ---------------------- GitHub Codespaces
+			- "github.remotehub", // ----------------------- GitHub Repositories
+			- "howardzuo.vscode-git-tags", // -------------- Git Tags
+			- "adam-bender.commit-message-editor", // ------ Commit Message Editor
+		*/
+
+        "github.copilot", // ------------------------- GitHub Copilot
+        "github.copilot-chat", // -------------------- GitHub Copilot Chat
+        "github.vscode-github-actions", // ----------- GitHub Actions
+
+        /* 
+			Containers
+		*/
+
+        "ms-azuretools.vscode-docker", // ------------ Docker
+        "okteto.kubernetes-context", // -------------- Kubernetes Context
+
+        /* 
+			Miscellaneous
+		*/
+
+        "mikestead.dotenv", // ----------------------- DotENV
+        "nhoizey.gremlins", // ----------------------- Gremlins tracker for Visual Studio Code
+        "streetsidesoftware.code-spell-checker", // -- Code Spell Checker
+        "vscode-icons-team.vscode-icons" // ---------- vscode-icons
+      ]
+    }
+  }
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 }
