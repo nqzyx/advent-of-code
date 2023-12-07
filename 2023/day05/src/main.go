@@ -1,16 +1,21 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
-	"regexp"
+	"strconv"
 	"strings"
 )
 
-func printErr(err error) {
-	fmt.Println(err)
-	os.Exit(1)
+func jsonPrint(v any) {
+	indent := strings.Repeat(" ", 2)
+	ba, err := json.MarshalIndent(v, "", indent)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(ba))
 }
 
 func getArgs() (dataPath string) {
@@ -30,58 +35,38 @@ func getInputData() (inputData []string) {
 	dataPath := getArgs()
 	inputDataAsByteArray, err := os.ReadFile(dataPath)
 	if err != nil {
-		printErr(err)
+		panic(err)
 	}
 	inputData = strings.Split(string(inputDataAsByteArray), "\n\n")
 	return
 }
 
-type GameData struct {
-	seeds   []int
-	xRefMap map[string]XRef
-}
-
-var digitsRegexp = regexp.MustCompile("([1-9][0-9]+)")
-
-func getSeedList(str string) []int {
-	strings.Trim()
-}
-
-func parseInputData(inputData []string) GameData {
-	gameData := new(GameData)
-	for _, data := range inputData {
-		switch true {
-		case strings.HasPrefix(data, "seeds:"):
-			gameData.seeds = getSeedList(data)
-		default:
-			gameData.addXrefMap(data)
+func partOne() (answer uint32) {
+	gardenData := NewGardenData(getInputData())
+	jsonPrint(map[string]interface{}{"gardenData": gardenData})
+	closest, _ := strconv.ParseUint("0xFFFFFFFF", 0, 32)
+	for _, seed := range gardenData.seeds {
+		location := uint64(gardenData.GetTargetValue("seed", seed, "location"))
+		if location < closest {
+			closest = location
 		}
 	}
-	return gameData
-}
-
-func partOne() (answer int) {
-	inputData := getInputData()
-
-	fmt.Println(inputData)
-
-	xref := NewXRef("seed", "soil").AddXRefRange(5, 43, 49)
-	fmt.Println(xref)
-
-	answer = len(inputData)
+	answer = uint32(closest)
 	return
 }
 
-func partTwo() (answer int) {
+func partTwo() (answer uint32) {
 	inputData := getInputData()
 
 	// Do the needful
 
-	answer = len(inputData)
+	answer = uint32(len(inputData))
 	return
 }
 
 func main() {
-	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	jsonPrint(map[string]uint32{
+		"Part1": partOne(),
+		"Part2": partTwo(),
+	})
 }
