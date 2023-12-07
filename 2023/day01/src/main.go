@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
@@ -9,18 +10,13 @@ import (
 	"strings"
 )
 
-func printErr(err error) {
-	fmt.Println(err)
-	os.Exit(1)
-}
-
 func getArgs(partName string) (dataPath string) {
 	dataFolder := "../data"
 	dataPath = path.Join(dataFolder, "input/data.txt")
 	for _, arg := range os.Args[1:] {
 		if arg == "-e" {
 			dataPath = path.Join(dataFolder, "example", partName, "data.txt")
-			break;
+			break
 		}
 	}
 	return
@@ -30,33 +26,33 @@ func getInput(partName string) (input []string) {
 	dataPath := getArgs(partName)
 	rawInput, err := os.ReadFile(dataPath)
 	if err != nil {
-		printErr(err)
+		panic(err)
 	}
 	input = strings.Split(string(rawInput), "\n")
 	return
 }
 
-var digitNamesToValues map[string]int64 = map[string]int64 { 
-	"one": 1, 
-	"two": 2, 
-	"three": 3, 
-	"four": 4, 
-	"five": 5, 
-	"six": 6, 
-	"seven": 7, 
-	"eight": 8, 
-	"nine": 9,
+var digitNamesToValues map[string]int64 = map[string]int64{
+	"one":   1,
+	"two":   2,
+	"three": 3,
+	"four":  4,
+	"five":  5,
+	"six":   6,
+	"seven": 7,
+	"eight": 8,
+	"nine":  9,
 }
-var digitNameReplacements map[string]string = map[string]string { 
-	"one": "o1e", 
-	"two": "t2o", 
-	"three": "t3e", 
-	"four": "f4r",
-	"five": "f5e", 
-	"six": "s6x",
-	"seven": "s7n", 
-	"eight": "e8t", 
-	"nine": "n9e",
+var digitNameReplacements map[string]string = map[string]string{
+	"one":   "o1e",
+	"two":   "t2o",
+	"three": "t3e",
+	"four":  "f4r",
+	"five":  "f5e",
+	"six":   "s6x",
+	"seven": "s7n",
+	"eight": "e8t",
+	"nine":  "n9e",
 }
 
 var notDigitsRegexpString string = "[^1-9]"
@@ -65,7 +61,7 @@ var notDigitsRegexp regexp.Regexp = *regexp.MustCompile(notDigitsRegexpString)
 func mapInputToNumsByDigits(strs []string) (nums []int64) {
 	for _, str := range strs {
 		str = notDigitsRegexp.ReplaceAllString(str, "")
-		num, _ := strconv.ParseInt(str[0:1] + str[len(str) -1:], 10, 64)
+		num, _ := strconv.ParseInt(str[0:1]+str[len(str)-1:], 10, 64)
 		nums = append(nums, num)
 	}
 	return
@@ -106,7 +102,7 @@ func mapInputToNumsBySubstr(strs []string) (nums []int64) {
 				break
 			}
 		}
-		nums = append(nums, (a * 10) + b)
+		nums = append(nums, (a*10)+b)
 	}
 	return
 }
@@ -121,8 +117,6 @@ func partOne() (total int64) {
 	return
 }
 
-
-
 func partTwo() (total int64) {
 	input := getInput("part2")
 	nums := mapInputToNumsBySubstr(input)
@@ -133,6 +127,15 @@ func partTwo() (total int64) {
 }
 
 func main() {
-	fmt.Printf("Part 1 Answer: %v\n", partOne())
-	fmt.Printf("Part 2 Answer: %v\n", partTwo())
+	answers := map[string]int64{
+		"Part1": partOne(),
+		"Part2": partTwo(),
+	}
+
+	jsonBytes, err := json.MarshalIndent(answers, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(jsonBytes))
 }
