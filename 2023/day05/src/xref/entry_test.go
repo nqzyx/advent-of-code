@@ -5,32 +5,52 @@ import (
 	"testing"
 )
 
-func TestNewRange(t *testing.T) {
+func TestNewEntry(t *testing.T) {
 	type In struct {
-		start  uint64
-		length uint64
+		s uint64
+		d uint64
+		l uint64
 	}
 	type Want struct {
-		r   *Range
+		e   *Entry
 		err bool
 	}
 	cases := []struct {
 		in   In
 		want Want
 	}{
-		{in: In{start: 2, length: 5}, want: Want{r: &Range{start: 2, length: 5, end: 5 + 2}, err: false}},
-		{in: In{start: 99, length: 7}, want: Want{r: &Range{start: 99, length: 7, end: 99 + 7}, err: false}},
-		{in: In{start: 0, length: 0}, want: Want{r: nil, err: true}},
+		{
+			in: In{s: 2, d: 99, l: 5},
+			want: Want{e: &Entry{
+				source:      &Range{start: 2, length: 5, end: 5 + 2},
+				destination: &Range{start: 99, length: 5, end: 99 + 5},
+			}, err: false},
+		},
+		{
+			in: In{s: 99, d: 2, l: 7},
+			want: Want{
+				e: &Entry{
+					source:      &Range{start: 99, length: 7, end: 99 + 7},
+					destination: &Range{start: 2, length: 7, end: 2 + 7},
+				}, err: false},
+		},
+		{
+			in: In{s: 0, d: 0, l: 0},
+			want: Want{
+				e:   nil,
+				err: true,
+			},
+		},
 	}
 	for _, c := range cases {
-		got, err := NewRange(c.in.start, c.in.length)
-		if !reflect.DeepEqual(got, c.want.r) || c.want.err == (err == nil) {
-			t.Errorf("NewRange(%v) == (%v, %v), want (%v, %v)", c.in, got, err == nil, c.want.r, c.want.err)
+		got, err := NewEntry(c.in.s, c.in.d, c.in.l)
+		if !reflect.DeepEqual(&got, &c.want.e) || (err == nil) == c.want.err {
+			t.Errorf("NewEntry(%v) == (%v, %v), want (%v, %v)", c.in, *got, err == nil, *c.want.e, c.want.err)
 		}
 	}
 }
 
-func TestRangeCovers(t *testing.T) {
+func TestCovers(t *testing.T) {
 	r := Range{start: 2, length: 5, end: 5 + 2}
 	cases := []struct {
 		in   uint64
@@ -55,7 +75,7 @@ func TestRangeCovers(t *testing.T) {
 	}
 }
 
-func TestRangeOffset(t *testing.T) {
+func TestOffset(t *testing.T) {
 	r := Range{start: 2, length: 5, end: 5 + 2}
 	type Want struct {
 		n  uint64

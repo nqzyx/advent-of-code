@@ -1,9 +1,9 @@
 package xref
 
 type Xref struct {
-	source          	string
-	destination         string
-	entries		 		[]Entry
+	source      string
+	destination string
+	entries     []Entry
 }
 
 // Ensure Interfaces are implemented
@@ -11,9 +11,9 @@ var _ Interface = &Xref{}
 
 func NewXref(name string, source string, destination string, size int) *Xref {
 	xref := Xref{
-		source:         	source,
-		destination:        destination,
-		entries:			make([]Entry, 0),
+		source:      source,
+		destination: destination,
+		entries:     make([]Entry, 0),
 	}
 	return &xref
 }
