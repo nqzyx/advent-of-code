@@ -6,4 +6,7 @@ use (
 	./day03/src
 	./day04/src
 	./day05/src
+	./day05/src/xref
+	./day05/src/farmdata
+	./day05/src/utils
 )

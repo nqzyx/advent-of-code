@@ -1,22 +1,14 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path"
 	"strconv"
 	"strings"
-)
 
-func jsonPrint(v any) {
-	indent := strings.Repeat(" ", 2)
-	ba, err := json.MarshalIndent(v, "", indent)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(ba))
-}
+	"nqzyx.xyz/advent-of-code/2023/day05/farmdata"
+)
 
 func getArgs() (dataPath string) {
 	dataBaseFolder := "../data"
@@ -41,32 +33,33 @@ func getInputData() (inputData []string) {
 	return
 }
 
-func partOne() (answer uint32) {
-	gardenData := NewGardenData(getInputData())
-	jsonPrint(map[string]interface{}{"gardenData": gardenData})
-	closest, _ := strconv.ParseUint("0xFFFFFFFF", 0, 32)
-	for _, seed := range gardenData.seeds {
-		location := uint64(gardenData.GetTargetValue("seed", seed, "location"))
-		if location < closest {
-			closest = location
+func partOne() (answer uint64) {
+	farmData := farmdata.NewFarmData(getInputData())
+	closestLocation, _ := strconv.ParseUint("0xFFFFFFFFFFFFFFFF", 0, 64)
+	for _, seed := range farmData.Seeds() {
+		var location uint64
+		location, err := farmData.DestinationValueByType("seed", seed, "location")
+		if err != nil {
+			panic(err)
+		}
+		if uint64(location) < closestLocation {
+			closestLocation = uint64(location)
 		}
 	}
-	answer = uint32(closest)
+	answer = uint64(closestLocation)
 	return
 }
 
-func partTwo() (answer uint32) {
+func partTwo() (answer uint64) {
 	inputData := getInputData()
 
 	// Do the needful
 
-	answer = uint32(len(inputData))
+	answer = uint64(len(inputData))
 	return
 }
 
 func main() {
-	jsonPrint(map[string]uint32{
-		"Part1": partOne(),
-		"Part2": partTwo(),
-	})
+	fmt.Println("Part 1:", partOne())
+	fmt.Println("Part 2:", partTwo())
 }
