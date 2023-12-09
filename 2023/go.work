@@ -1,12 +1,13 @@
 go 1.21.3
 
 use (
-	./day01/src
-	./day02/src
-	./day03/src
-	./day04/src
-	./day05/src
-	./day05/src/xref
-	./day05/src/farmdata
-	./day05/src/utils
+	./cmd/day01/src
+	./cmd/day02/src
+	./cmd/day03/src
+	./cmd/day04/src
+	./cmd/day05
+	./cmd/jsontest
+	./internal/farmdata
+	./internal/utils
+	./internal/xref
 )

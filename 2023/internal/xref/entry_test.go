@@ -1,6 +1,8 @@
 package xref
 
 import (
+	"encoding/json"
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -22,16 +24,16 @@ func TestNewEntry(t *testing.T) {
 		{
 			in: In{s: 2, d: 99, l: 5},
 			want: Want{e: &Entry{
-				source:      &Range{start: 2, length: 5, end: 5 + 2},
-				destination: &Range{start: 99, length: 5, end: 99 + 5},
+				Source:      Range{Start: 2, End: 5 + 2},
+				Destination: Range{Start: 99, End: 99 + 5},
 			}, err: false},
 		},
 		{
 			in: In{s: 99, d: 2, l: 7},
 			want: Want{
 				e: &Entry{
-					source:      &Range{start: 99, length: 7, end: 99 + 7},
-					destination: &Range{start: 2, length: 7, end: 2 + 7},
+					Source:      Range{Start: 99, End: 99 + 7},
+					Destination: Range{Start: 2, End: 2 + 7},
 				}, err: false},
 		},
 		{
@@ -51,7 +53,7 @@ func TestNewEntry(t *testing.T) {
 }
 
 func TestCovers(t *testing.T) {
-	r := Range{start: 2, length: 5, end: 5 + 2}
+	r := Range{Start: 2, End: 5 + 2}
 	cases := []struct {
 		in   uint64
 		want bool
@@ -75,8 +77,8 @@ func TestCovers(t *testing.T) {
 	}
 }
 
-func TestOffset(t *testing.T) {
-	r := Range{start: 2, length: 5, end: 5 + 2}
+func TestPosition(t *testing.T) {
+	r := Range{Start: 2, End: 5 + 2}
 	type Want struct {
 		n  uint64
 		ok bool
@@ -96,9 +98,22 @@ func TestOffset(t *testing.T) {
 		{in: 8, want: Want{n: 0, ok: false}},
 	}
 	for _, c := range cases {
-		got, ok := r.Offset(c.in)
+		got, ok := r.Position(c.in)
 		if got != c.want.n || ok != c.want.ok {
-			t.Errorf("(%v).Offset(%v) == %v, want %v", r, c.in, got, c.want)
+			t.Errorf("(%v).Position(%v) == %v, want %v", r, c.in, got, c.want)
 		}
+	}
+}
+
+func TestMarshalJSON(t *testing.T) {
+	type localRange Range
+	var r localRange = localRange{
+		Start: 1234,
+		End:   5678,
+	}
+	if json, err := json.Marshal(r); err != nil {
+		panic(err)
+	} else {
+		fmt.Println("json:", json)
 	}
 }

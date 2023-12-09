@@ -1,17 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
 	"strconv"
 	"strings"
 
-	"nqzyx.xyz/advent-of-code/2023/day05/farmdata"
+	"nqzyx.xyz/advent-of-code/2023/farmdata"
 )
 
 func getArgs() (dataPath string) {
-	dataBaseFolder := "../data"
+	dataBaseFolder := "./data"
 	dataPath = path.Join(dataBaseFolder, "input", "data.txt")
 	args := os.Args[1:]
 	for a, arg := range args {
@@ -35,6 +36,7 @@ func getInputData() (inputData []string) {
 
 func partOne() (answer uint64) {
 	farmData := farmdata.NewFarmData(getInputData())
+	fmt.Println(json.Marshal(farmData))
 	closestLocation, _ := strconv.ParseUint("0xFFFFFFFFFFFFFFFF", 0, 64)
 	for _, seed := range farmData.Seeds() {
 		var location uint64
@@ -42,9 +44,7 @@ func partOne() (answer uint64) {
 		if err != nil {
 			panic(err)
 		}
-		if uint64(location) < closestLocation {
-			closestLocation = uint64(location)
-		}
+		closestLocation = min(location, closestLocation)
 	}
 	answer = uint64(closestLocation)
 	return
