@@ -55,7 +55,6 @@ func partTwo(seeds []int64, almanac [][][]int64) int64 {
 		}
 	}
 	panic(fmt.Errorf("Unable to find the closest location"))
-	return math.MaxInt64
 }
 
 func doWeHaveThatSeed(ranges [][]int64, seed int64) bool {
