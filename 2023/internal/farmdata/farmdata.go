@@ -18,6 +18,7 @@ type FarmData struct {
 
 type FarmDataInterface interface {
 	AddSeeds(string) *FarmData
+	AddSeedRanges(string) *FarmData
 	AddXrefMap(string) *FarmData
 	Lookup(string, uint64) (uint64, error)
 	Resolve(string, string, uint64) (uint64, error)
