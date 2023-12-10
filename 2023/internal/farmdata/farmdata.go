@@ -17,8 +17,8 @@ type FarmData struct {
 type FarmDataInterface interface {
 	AddSeeds(string) *FarmData
 	AddXrefMap(string) *FarmData
-	DestinationValue(string, uint64) (uint64, error)
-	DestinationValueByType(string, uint64, string) (uint64, error)
+	Lookup(string, uint64) (uint64, error)
+	Resolve(string, string, uint64) (uint64, error)
 }
 
 // Ensure Interfaces are fully implemented
@@ -54,45 +54,59 @@ func (f *FarmData) AddXrefMap(xrefMapData string) *FarmData {
 		stringArray := strings.Split(name, "-to-")
 		return stringArray[0], stringArray[1]
 	}()
+	// fmt.Printf("xref.NewXref(%v, %v, %v, %v)\n", name, source, destination, len(xrefData))
 	xref := xref.NewXref(name, source, destination, len(xrefData))
 	for _, rangeData := range xrefData {
 		destinationValue, sourceValue, length := func(s string) (uint64, uint64, uint64) {
 			uintArray := utils.NewIntArrayFromString[uint64](s)
 			return uintArray[0], uintArray[1], uintArray[2]
 		}(rangeData)
-		xref.AddRange(sourceValue, destinationValue, length)
+		if length > 0 {
+			// fmt.Printf("xref.AddRange(%v, %v, %v)\n", sourceValue, destinationValue, length)
+			xref.AddRange(sourceValue, destinationValue, length)
+		}
 	}
+	fmt.Printf("%v: %v\n", name, *xref)
 	f.XrefMap[name] = *xref
 	return f
 }
 
-func (f *FarmData) DestinationValue(s string, v uint64) (result uint64, err error) {
-	if x, ok := f.XrefMap[s]; ok {
-		if dv, ok := x.Lookup(x.Source, x.Destination, v); ok {
+func (f *FarmData) Lookup(name string, value uint64) (result uint64, err error) {
+	if x, ok := f.XrefMap[name]; ok {
+		if dv, ok := x.Lookup(x.Source, value); ok {
 			return dv, nil
 		}
-		return 0, fmt.Errorf("cannot find value for \"%v\" = %v", s, v)
+		return 0, fmt.Errorf("\"%v\" cannot cross-reference the value %v", name, value)
 	}
-	return 0, fmt.Errorf("xref name \"%v\" was not found", s)
+	return 0, fmt.Errorf("the cross-reference named \"%v\" was not found", name)
 }
 
-func (f *FarmData) DestinationValueByType(s string, v uint64, d string) (result uint64, err error) {
-	xRefName := fmt.Sprintf("%v-to-%v", s, d)
-	if result, err = f.DestinationValue(xRefName, v); err == nil {
+func (f *FarmData) Resolve(source string, destination string, value uint64) (result uint64, err error) {
+	fmt.Printf("BEGIN: Resolve(%v, %v, %v)\n", source, destination, value)
+	xRefName := fmt.Sprintf("%v-to-%v", source, destination)
+	if result, err = f.Lookup(xRefName, value); err == nil {
+		fmt.Printf("END: Resolve(%v, %v, %v) == %v\n", source, destination, value, result)
 		return
 	}
-	var x xref.Xref
-	for _, x = range f.XrefMap {
-		if x.Source == s {
-			if newValue, ok := x.Lookup(s, v); ok {
-				result, err = f.DestinationValueByType(
-					x.Destination,
-					newValue,
-					d,
-				)
-				return
-			}
+	for xrefName, x := range f.XrefMap {
+		if source != x.Source {
+			continue
+		}
+		var ok bool
+		if result, ok = x.Lookup(source, value); !ok {
+			return 0, fmt.Errorf(
+				"failed to resolve \"%v\" to \"%v\" at \"%v\"",
+				source, destination, xrefName,
+			)
+		}
+		if destination == x.Destination {
+			return
+		}
+		newSource, newValue := x.Destination, result
+		if result, err = f.Resolve(newSource, destination, newValue); err == nil {
+			fmt.Printf("STEP: Resolve(%v, %v, %v) == %v\n", newSource, destination, newValue, result)
+			return
 		}
 	}
-	return 0, fmt.Errorf("cannot find xref from \"%v\" to \"%v\"", s, d)
+	return 0, fmt.Errorf("cannot find xref from \"%v\" to \"%v\"", source, destination)
 }

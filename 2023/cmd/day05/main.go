@@ -1,14 +1,14 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"math"
 	"os"
 	"path"
-	"strconv"
 	"strings"
 
 	"nqzyx.xyz/advent-of-code/2023/farmdata"
+	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
 func getArgs() (dataPath string) {
@@ -36,15 +36,16 @@ func getInputData() (inputData []string) {
 
 func partOne() (answer uint64) {
 	farmData := farmdata.NewFarmData(getInputData())
-	fmt.Println(json.Marshal(farmData))
-	closestLocation, _ := strconv.ParseUint("0xFFFFFFFFFFFFFFFF", 0, 64)
-	for _, seed := range farmData.Seeds() {
-		var location uint64
-		location, err := farmData.DestinationValueByType("seed", seed, "location")
-		if err != nil {
-			panic(err)
+	if err := utils.WriteJsonToFile("./farmdata.json", farmData, true); err != nil {
+		fmt.Println(err)
+	}
+	closestLocation := uint64(math.MaxUint64)
+	for _, seed := range farmData.Seeds {
+		if location, err := farmData.Resolve("seed", "location", seed); err == nil {
+			closestLocation = min(location, closestLocation)
+		} else {
+			fmt.Println(err)
 		}
-		closestLocation = min(location, closestLocation)
 	}
 	answer = uint64(closestLocation)
 	return
@@ -60,6 +61,15 @@ func partTwo() (answer uint64) {
 }
 
 func main() {
-	fmt.Println("Part 1:", partOne())
-	fmt.Println("Part 2:", partTwo())
+	answersJson, err := utils.JsonStringify(map[string]any{
+		"Part 1": partOne(),
+		"Part 2": partTwo(),
+	}, true)
+	if err == nil {
+		err = utils.WriteStringToFile("./answers.json", answersJson)
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(answersJson)
 }

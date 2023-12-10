@@ -11,7 +11,7 @@ type Xref struct {
 }
 
 type Interface interface {
-	Lookup(string, string, uint64) (uint64, bool)
+	Lookup(string, uint64) (uint64, bool)
 	AddRange(uint64, uint64, uint64) (*Xref, error)
 }
 
@@ -21,23 +21,24 @@ func NewXref(name string, source string, destination string, length int) *Xref {
 	xref := Xref{
 		Source:      source,
 		Destination: destination,
-		Entries:     make([]Entry, length),
+		Entries:     make([]Entry, 0, length),
 	}
 	return &xref
 }
 
-func (x *Xref) Lookup(source string, destination string, value uint64) (result uint64, ok bool) {
-	if source == x.Source && destination == x.Destination {
+func (x *Xref) Lookup(source string, value uint64) (result uint64, ok bool) {
+	if source == x.Source {
 		for _, entry := range x.Entries {
-			if result, ok = entry.LookupSource(value); ok {
-				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", x.Source, value, x.Destination, result)
+			if result, ok = entry.LookupDestination(value); ok {
+				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Destination, result)
 				return
 			}
 		}
 		return value, false
-	} else if source == x.Destination && destination == x.Source {
+	} else if source == x.Destination {
 		for _, entry := range x.Entries {
-			if result, ok = entry.LookupDestination(value); ok {
+			if result, ok = entry.LookupSource(value); ok {
+				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Source, result)
 				return
 			}
 		}

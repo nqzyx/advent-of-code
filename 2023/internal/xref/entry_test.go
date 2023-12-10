@@ -1,8 +1,6 @@
 package xref
 
 import (
-	"encoding/json"
-	"fmt"
 	"reflect"
 	"testing"
 )
@@ -34,7 +32,8 @@ func TestNewEntry(t *testing.T) {
 				e: &Entry{
 					Source:      Range{Start: 99, End: 99 + 7},
 					Destination: Range{Start: 2, End: 2 + 7},
-				}, err: false},
+				}, err: false,
+			},
 		},
 		{
 			in: In{s: 0, d: 0, l: 0},
@@ -105,15 +104,15 @@ func TestPosition(t *testing.T) {
 	}
 }
 
-func TestMarshalJSON(t *testing.T) {
-	type localRange Range
-	var r localRange = localRange{
-		Start: 1234,
-		End:   5678,
-	}
-	if json, err := json.Marshal(r); err != nil {
-		panic(err)
-	} else {
-		fmt.Println("json:", json)
-	}
-}
+// func TestMarshalJSON(t *testing.T) {
+// 	type localRange Range
+// 	var r localRange = localRange{
+// 		Start: 1234,
+// 		End:   5678,
+// 	}
+// 	if json, err := json.Marshal(r); err != nil {
+// 		panic(err)
+// 	} else {
+// 		fmt.Println("json:", json)
+// 	}
+// }

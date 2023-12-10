@@ -27,18 +27,26 @@ func NewEntry(startSource uint64, startDestination uint64, length uint64) (e *En
 	return
 }
 
-func (e *Entry) LookupDestination(sourceValue uint64) (destinationValue uint64, ok bool) {
+func (e *Entry) LookupDestination(sourceValue uint64) (result uint64, ok bool) {
 	var position uint64
 	if position, ok = e.Source.Position(sourceValue); ok {
-		destinationValue = e.Destination.Start + position
+		result = e.Destination.Start + position
+		return
+	} else {
+		result, ok = sourceValue, true
+		return
 	}
-	return
+	return 0, false
 }
 
-func (e *Entry) LookupSource(destinationValue uint64) (sourceValue uint64, ok bool) {
+func (e *Entry) LookupSource(destinationValue uint64) (result uint64, ok bool) {
 	var position uint64
 	if position, ok = e.Destination.Position(destinationValue); ok {
-		sourceValue = e.Source.Start + position
+		result = e.Source.Start + position
+		return
+	} else {
+		result, ok = destinationValue, true
+		return
 	}
-	return
+	return 0, false
 }
