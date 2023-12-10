@@ -7,7 +7,7 @@ use (
 	./2023/cmd/day03/src
 	./2023/cmd/day04/src
 	./2023/cmd/day05
-	./2023/internal/farmdata
+	./2023/cmd/day05/almanac
 	./2023/internal/utils
 	./2023/internal/xref
 )

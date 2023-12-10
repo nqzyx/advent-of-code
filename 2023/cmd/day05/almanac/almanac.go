@@ -1,4 +1,4 @@
-package farmdata
+package almanac
 
 import (
 	"fmt"
@@ -9,50 +9,50 @@ import (
 	"nqzyx.xyz/advent-of-code/2023/xref"
 )
 
-type FarmData struct {
+type Almanac struct {
 	Seeds      []uint64
 	SeedRanges []xref.Range
 	part1      bool
 	XrefMap    map[string]xref.Xref
 }
 
-type FarmDataInterface interface {
-	AddSeeds(string) *FarmData
-	AddSeedRanges(string) *FarmData
-	AddXrefMap(string) *FarmData
+type AlmanacInterface interface {
+	AddSeeds(string) *Almanac
+	AddSeedRanges(string) *Almanac
+	AddXrefMap(string) *Almanac
 	Lookup(string, uint64) (uint64, error)
 	Resolve(string, string, uint64) (uint64, error)
 }
 
 // Ensure Interfaces are fully implemented
-var _ FarmDataInterface = &FarmData{}
+var _ AlmanacInterface = &Almanac{}
 
-func NewFarmData(stringData []string, part1 bool) *FarmData {
-	FarmData := new(FarmData)
-	FarmData.XrefMap = make(map[string]xref.Xref)
-	FarmData.part1 = part1
+func NewAlmanac(stringData []string, part1 bool) *Almanac {
+	Almanac := new(Almanac)
+	Almanac.XrefMap = make(map[string]xref.Xref)
+	Almanac.part1 = part1
 	for _, data := range stringData {
 		switch true {
 		case strings.HasPrefix(data, "seeds:"):
 			if part1 {
-				FarmData.AddSeeds(data)
+				Almanac.AddSeeds(data)
 			} else {
-				FarmData.AddSeedRanges(data)
+				Almanac.AddSeedRanges(data)
 			}
 		default:
-			FarmData.AddXrefMap(data)
+			Almanac.AddXrefMap(data)
 		}
 	}
-	return FarmData
+	return Almanac
 }
 
-func (f *FarmData) AddSeeds(seedData string) *FarmData {
+func (f *Almanac) AddSeeds(seedData string) *Almanac {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
 	f.Seeds = utils.NewIntArrayFromString[uint64](seeds)
 	return f
 }
 
-func (f *FarmData) AddSeedRanges(seedData string) *FarmData {
+func (f *Almanac) AddSeedRanges(seedData string) *Almanac {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
 	seedArray := utils.NewIntArrayFromString[uint64](seeds)
 	for i := 0; i < len(seedArray); i += 2 {
@@ -62,7 +62,7 @@ func (f *FarmData) AddSeedRanges(seedData string) *FarmData {
 	return f
 }
 
-func (f *FarmData) AddXrefMap(xrefMapData string) *FarmData {
+func (f *Almanac) AddXrefMap(xrefMapData string) *Almanac {
 	name, xrefData := func() (string, []string) {
 		stringArray := strings.Split(xrefMapData, "\n")
 		return strings.TrimSpace(strings.ReplaceAll(stringArray[0], "map:", "")), stringArray[1:]
@@ -88,7 +88,7 @@ func (f *FarmData) AddXrefMap(xrefMapData string) *FarmData {
 	return f
 }
 
-func (f *FarmData) Lookup(name string, value uint64) (result uint64, err error) {
+func (f *Almanac) Lookup(name string, value uint64) (result uint64, err error) {
 	if x, ok := f.XrefMap[name]; ok {
 		if dv, ok := x.Lookup(x.Source, value); ok {
 			return dv, nil
@@ -98,7 +98,7 @@ func (f *FarmData) Lookup(name string, value uint64) (result uint64, err error) 
 	return 0, fmt.Errorf("the cross-reference named \"%v\" was not found", name)
 }
 
-func (f *FarmData) Resolve(source string, destination string, value uint64) (result uint64, err error) {
+func (f *Almanac) Resolve(source string, destination string, value uint64) (result uint64, err error) {
 	// fmt.Printf("BEGIN: Resolve(%v, %v, %v)\n", source, destination, value)
 	xRefName := fmt.Sprintf("%v-to-%v", source, destination)
 	if result, err = f.Lookup(xRefName, value); err == nil {

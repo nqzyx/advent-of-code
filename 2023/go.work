@@ -6,9 +6,9 @@ use (
 	./cmd/day03/src
 	./cmd/day04/src
 	./cmd/day05
+	./cmd/day05/farmdata
 	./cmd/day05-malciin
 	./cmd/jsontest
-	./internal/farmdata
 	./internal/utils
 	./internal/xref
 )

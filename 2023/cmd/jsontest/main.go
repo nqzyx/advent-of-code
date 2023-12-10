@@ -57,7 +57,7 @@ func main() {
 		},
 	}
 	if ba, e := json.MarshalIndent(t, "", "  "); e != nil {
-		fmt.Println(e)
+		panic(e)
 	} else {
 		fmt.Println(string(ba))
 	}
