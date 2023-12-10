@@ -35,7 +35,7 @@ func getInputData() (inputData []string) {
 }
 
 func partOne() (answer uint64) {
-	farmData := farmdata.NewFarmData(getInputData())
+	farmData := farmdata.NewFarmData(getInputData(), true)
 	if err := utils.WriteJsonToFile("./data/farmdata.json", farmData, true); err != nil {
 		fmt.Println(err)
 	}
@@ -52,11 +52,21 @@ func partOne() (answer uint64) {
 }
 
 func partTwo() (answer uint64) {
-	inputData := getInputData()
-
-	// Do the needful
-
-	answer = uint64(len(inputData))
+	farmData := farmdata.NewFarmData(getInputData(), false)
+	if err := utils.WriteJsonToFile("./data/farmdata.json", farmData, true); err != nil {
+		fmt.Println(err)
+	}
+	closestLocation := uint64(math.MaxUint64)
+	for _, rng := range farmData.SeedRanges {
+		for seed := rng.Start; seed < rng.End; seed++ {
+			if location, err := farmData.Resolve("seed", "location", seed); err == nil {
+				closestLocation = min(location, closestLocation)
+			} else {
+				fmt.Println(err)
+			}
+		}
+	}
+	answer = uint64(closestLocation)
 	return
 }
 

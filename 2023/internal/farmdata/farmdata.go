@@ -10,8 +10,10 @@ import (
 )
 
 type FarmData struct {
-	Seeds   []uint64
-	XrefMap map[string]xref.Xref
+	Seeds      []uint64
+	SeedRanges []xref.Range
+	part1      bool
+	XrefMap    map[string]xref.Xref
 }
 
 type FarmDataInterface interface {
@@ -24,14 +26,18 @@ type FarmDataInterface interface {
 // Ensure Interfaces are fully implemented
 var _ FarmDataInterface = &FarmData{}
 
-func NewFarmData(stringData []string) *FarmData {
+func NewFarmData(stringData []string, part1 bool) *FarmData {
 	FarmData := new(FarmData)
 	FarmData.XrefMap = make(map[string]xref.Xref)
-
+	FarmData.part1 = part1
 	for _, data := range stringData {
 		switch true {
 		case strings.HasPrefix(data, "seeds:"):
-			FarmData.AddSeeds(data)
+			if part1 {
+				FarmData.AddSeeds(data)
+			} else {
+				FarmData.AddSeedRanges(data)
+			}
 		default:
 			FarmData.AddXrefMap(data)
 		}
@@ -42,6 +48,16 @@ func NewFarmData(stringData []string) *FarmData {
 func (f *FarmData) AddSeeds(seedData string) *FarmData {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
 	f.Seeds = utils.NewIntArrayFromString[uint64](seeds)
+	return f
+}
+
+func (f *FarmData) AddSeedRanges(seedData string) *FarmData {
+	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
+	seedArray := utils.NewIntArrayFromString[uint64](seeds)
+	for i := 0; i < len(seedArray); i += 2 {
+		rng, _ := xref.NewRange(seedArray[i], seedArray[i+1])
+		f.SeedRanges = append(f.SeedRanges, *rng)
+	}
 	return f
 }
 
@@ -82,10 +98,10 @@ func (f *FarmData) Lookup(name string, value uint64) (result uint64, err error) 
 }
 
 func (f *FarmData) Resolve(source string, destination string, value uint64) (result uint64, err error) {
-	fmt.Printf("BEGIN: Resolve(%v, %v, %v)\n", source, destination, value)
+	// fmt.Printf("BEGIN: Resolve(%v, %v, %v)\n", source, destination, value)
 	xRefName := fmt.Sprintf("%v-to-%v", source, destination)
 	if result, err = f.Lookup(xRefName, value); err == nil {
-		fmt.Printf("END: Resolve(%v, %v, %v) == %v\n", source, destination, value, result)
+		// fmt.Printf("END: Resolve(%v, %v, %v) == %v\n", source, destination, value, result)
 		return
 	}
 	for xrefName, x := range f.XrefMap {
@@ -104,7 +120,7 @@ func (f *FarmData) Resolve(source string, destination string, value uint64) (res
 		}
 		newSource, newValue := x.Destination, result
 		if result, err = f.Resolve(newSource, destination, newValue); err == nil {
-			fmt.Printf("STEP: Resolve(%v, %v, %v) == %v\n", newSource, destination, newValue, result)
+			// fmt.Printf("STEP: Resolve(%v, %v, %v) == %v\n", newSource, destination, newValue, result)
 			return
 		}
 	}

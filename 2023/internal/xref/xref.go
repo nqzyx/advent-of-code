@@ -1,9 +1,5 @@
 package xref
 
-import (
-	"fmt"
-)
-
 type Xref struct {
 	Source      string
 	Destination string
@@ -31,7 +27,7 @@ func (x *Xref) Lookup(source string, value uint64) (result uint64, ok bool) {
 	case x.Source:
 		for _, entry := range x.Entries {
 			if result, ok = entry.LookupDestination(value); ok {
-				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Destination, result)
+				// fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Destination, result)
 				return
 			}
 		}
@@ -39,7 +35,7 @@ func (x *Xref) Lookup(source string, value uint64) (result uint64, ok bool) {
 	case x.Destination:
 		for _, entry := range x.Entries {
 			if result, ok = entry.LookupSource(value); ok {
-				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Source, result)
+				// fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Source, result)
 				return
 			}
 		}
