@@ -1,6 +1,13 @@
 go 1.21.3
 
 use (
-	./2016/go.work
-    ./2023/go.work
+	./2016/day01/src
+	./2023/cmd/day01/src
+	./2023/cmd/day02/src
+	./2023/cmd/day03/src
+	./2023/cmd/day04/src
+	./2023/cmd/day05
+	./2023/internal/farmdata
+	./2023/internal/utils
+	./2023/internal/xref
 )

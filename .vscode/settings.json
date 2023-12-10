@@ -1,5 +1,12 @@
 {
     "cSpell.words": [
-        "dijkstrajs"
-    ]
+        "dijkstrajs",
+        "farmdata",
+        "nqzyx"
+    ],
+    "gopls": {
+        "ui.semanticTokens": true,
+        "formatting.gofumpt": true,
+        "verboseOutput": true
+    }
 }
