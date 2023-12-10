@@ -1,4 +1,4 @@
-module nqzyx.xyz/advent-of-code/2023/farmdata
+module nqzyx.xyz/advent-of-code/2023/day05/almanac
 
 go 1.21.3
 
@@ -9,6 +9,6 @@ require (
 
 require golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
 
-replace nqzyx.xyz/advent-of-code/2023/utils => ../utils
+replace nqzyx.xyz/advent-of-code/2023/utils => ../../../internal/utils
 
-replace nqzyx.xyz/advent-of-code/2023/xref => ../xref
+replace nqzyx.xyz/advent-of-code/2023/xref => ../../../internal/xref
