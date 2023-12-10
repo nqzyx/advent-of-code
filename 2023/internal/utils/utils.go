@@ -3,20 +3,12 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 
 	"golang.org/x/exp/constraints"
 )
-
-func PrintJSON(v any) string {
-	indent := strings.Repeat(" ", 2)
-	ba, err := json.MarshalIndent(v, "", indent)
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprint(string(ba))
-}
 
 var integerRegexp = regexp.MustCompile("[[:digit:]]+")
 
@@ -33,9 +25,55 @@ func NewIntArrayFromString[T constraints.Integer](s string) (result []T) {
 		var x T
 		err := Parse(v, &x)
 		if err != nil {
-			panic(err)
+			fmt.Println(err)
 		}
 		result[i] = T(x)
 	}
 	return
+}
+
+func JsonStringify(v any, indent bool) (string, error) {
+	const (
+		ASCII_SPACE rune = 0x20
+	)
+	var jsonBytes []byte
+	var jsonString string
+	var err error
+	if indent {
+		jsonBytes, err = json.MarshalIndent(v, "", strings.Repeat(string(ASCII_SPACE), 2))
+	} else {
+		jsonBytes, err = json.Marshal(v)
+	}
+	if err != nil {
+		return "", err
+	}
+	jsonString = string(jsonBytes)
+	return jsonString, nil
+}
+
+func WriteJsonToFile(filename string, v any, indent bool) error {
+	var jsonString string
+	var err error
+	if jsonString, err = JsonStringify(v, indent); err != nil {
+		return err
+	}
+	return WriteStringToFile(filename, jsonString)
+}
+
+func WriteStringToFile(filename string, content string) error {
+	var file *os.File
+	var err error
+
+	openFlags := os.O_CREATE + os.O_WRONLY
+
+	if file, err = os.OpenFile(filename, openFlags, os.FileMode(0o777)); err != nil {
+		return err
+	}
+	if _, err = file.WriteString(content); err != nil {
+		return err
+	}
+	if err = file.Close(); err != nil {
+		return err
+	}
+	return nil
 }
