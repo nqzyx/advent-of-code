@@ -12,26 +12,6 @@ import (
 
 var integerRegexp = regexp.MustCompile("[[:digit:]]+")
 
-func Parse[T constraints.Integer](s string, v *T) (err error) {
-	_, err = fmt.Sscanf(s, "%v", v)
-	return
-}
-
-func NewIntArrayFromString[T constraints.Integer](s string) (result []T) {
-	s = strings.TrimSpace(s)
-	sArr := integerRegexp.FindAllString(s, -1)
-	result = make([]T, len(sArr))
-	for i, v := range sArr {
-		var x T
-		err := Parse(v, &x)
-		if err != nil {
-			fmt.Println(err)
-		}
-		result[i] = T(x)
-	}
-	return
-}
-
 func JsonStringify(v any, indent bool) (string, error) {
 	const (
 		ASCII_SPACE rune = 0x20
@@ -49,6 +29,33 @@ func JsonStringify(v any, indent bool) (string, error) {
 	}
 	jsonString = string(jsonBytes)
 	return jsonString, nil
+}
+
+func NewIntArrayFromString[T constraints.Integer](s string) (result []T) {
+	s = strings.TrimSpace(s)
+	sArr := integerRegexp.FindAllString(s, -1)
+	result = make([]T, len(sArr))
+	for i, v := range sArr {
+		var x T
+		err := Parse(v, &x)
+		if err != nil {
+			fmt.Println(err)
+		}
+		result[i] = T(x)
+	}
+	return
+}
+
+func Parse[T constraints.Integer](s string, v *T) (err error) {
+	_, err = fmt.Sscanf(s, "%v", v)
+	return
+}
+
+func ReverseArray[T any](a []T) []T {
+	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
+	}
+	return a
 }
 
 func WriteJsonToFile(filename string, v any, indent bool) error {
