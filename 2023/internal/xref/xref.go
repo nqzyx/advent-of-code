@@ -27,22 +27,23 @@ func NewXref(name string, source string, destination string, length int) *Xref {
 }
 
 func (x *Xref) Lookup(source string, value uint64) (result uint64, ok bool) {
-	if source == x.Source {
+	switch source {
+	case x.Source:
 		for _, entry := range x.Entries {
 			if result, ok = entry.LookupDestination(value); ok {
 				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Destination, result)
 				return
 			}
 		}
-		return value, false
-	} else if source == x.Destination {
+		return value, true
+	case x.Destination:
 		for _, entry := range x.Entries {
 			if result, ok = entry.LookupSource(value); ok {
 				fmt.Printf("Lookup: (%v: %v) -> (%v: %v)\n", source, value, x.Source, result)
 				return
 			}
 		}
-		return value, false
+		return value, true
 	}
 	return 0, false
 }

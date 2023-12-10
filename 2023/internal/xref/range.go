@@ -33,11 +33,14 @@ func (r *Range) Length() uint64 {
 }
 
 func (r *Range) Covers(value uint64) bool {
-	return value >= r.Start && value < r.End
+	ok := value >= r.Start && value < r.End
+	fmt.Printf("value = %v, start = %v, end = %v, ok = %v\n", value, r.Start, r.End, ok)
+	return ok
 }
 
 func (r *Range) Position(value uint64) (position uint64, ok bool) {
 	if ok = r.Covers(value); ok {
+		fmt.Printf("position = %v\n", value-r.Start)
 		position = value - r.Start
 	}
 	return

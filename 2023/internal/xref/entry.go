@@ -1,5 +1,7 @@
 package xref
 
+import "fmt"
+
 type Entry struct {
 	Source      Range
 	Destination Range
@@ -31,9 +33,7 @@ func (e *Entry) LookupDestination(sourceValue uint64) (result uint64, ok bool) {
 	var position uint64
 	if position, ok = e.Source.Position(sourceValue); ok {
 		result = e.Destination.Start + position
-		return
-	} else {
-		result, ok = sourceValue, true
+		fmt.Printf("result = %v, ok = %v", result, ok)
 		return
 	}
 	return 0, false
@@ -43,9 +43,6 @@ func (e *Entry) LookupSource(destinationValue uint64) (result uint64, ok bool) {
 	var position uint64
 	if position, ok = e.Destination.Position(destinationValue); ok {
 		result = e.Source.Start + position
-		return
-	} else {
-		result, ok = destinationValue, true
 		return
 	}
 	return 0, false
