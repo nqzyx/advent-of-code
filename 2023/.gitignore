@@ -19,3 +19,9 @@
 
 # Go workspace file
 # go.work
+
+# Log files
+*.log
+
+# json files
+*.json
