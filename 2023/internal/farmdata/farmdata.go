@@ -9,11 +9,22 @@ import (
 	"nqzyx.xyz/advent-of-code/2023/xref"
 )
 
+type LookupResult struct {
+	Value uint64
+	Error error
+}
+
+type LookupArgs struct {
+	Name  string
+	Value uint64
+}
+
 type FarmData struct {
 	Seeds      []uint64
 	SeedRanges []xref.Range
 	part1      bool
 	XrefMap    map[string]xref.Xref
+	LookupMemo map[LookupArgs]LookupResult
 }
 
 type FarmDataInterface interface {
@@ -31,6 +42,8 @@ func NewFarmData(stringData []string, part1 bool) *FarmData {
 	FarmData := new(FarmData)
 	FarmData.XrefMap = make(map[string]xref.Xref)
 	FarmData.part1 = part1
+	FarmData.LookupMemo = make(map[LookupArgs]LookupResult)
+
 	for _, data := range stringData {
 		switch true {
 		case strings.HasPrefix(data, "seeds:"):
@@ -89,6 +102,22 @@ func (f *FarmData) AddXrefMap(xrefMapData string) *FarmData {
 }
 
 func (f *FarmData) Lookup(name string, value uint64) (result uint64, err error) {
+	/*args := LookupArgs{
+		Name:  name,
+		Value: value,
+	}
+
+	if res, ok := f.LookupMemo[args]; ok {
+		return res.Value, res.Error
+	} else {
+		defer func() {
+			f.LookupMemo[args] = LookupResult{
+				Value: result,
+				Error: err,
+			}
+		}()
+	}*/
+
 	if x, ok := f.XrefMap[name]; ok {
 		if dv, ok := x.Lookup(x.Source, value); ok {
 			return dv, nil
@@ -100,11 +129,13 @@ func (f *FarmData) Lookup(name string, value uint64) (result uint64, err error) 
 
 func (f *FarmData) Resolve(source string, destination string, value uint64) (result uint64, err error) {
 	// fmt.Printf("BEGIN: Resolve(%v, %v, %v)\n", source, destination, value)
+
 	xRefName := fmt.Sprintf("%v-to-%v", source, destination)
 	if result, err = f.Lookup(xRefName, value); err == nil {
 		// fmt.Printf("END: Resolve(%v, %v, %v) == %v\n", source, destination, value, result)
 		return
 	}
+
 	for xrefName, x := range f.XrefMap {
 		if source != x.Source {
 			continue
