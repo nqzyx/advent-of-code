@@ -3,21 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"strings"
 
 	"nqzyx.xyz/advent-of-code/2023/utils"
 )
-
-const (
-	DATAFILE    = "../day05/data/input/data.txt"
-	EXAMPLEFILE = "../day05/data/example/data1.txt"
-)
-
-var dataFile string = DATAFILE
-
-// var dataFile string = EXAMPLEFILE
 
 func main() {
 	seeds, almanac := getInput()
@@ -34,8 +26,6 @@ func main() {
 }
 
 func partOne(seeds []int64, almanac [][][]int64) int64 {
-	// dumpArray("seeds:", seeds)
-	// dumpArray("almanac:", almanac)
 	answer := int64(math.MaxInt64)
 	for _, s := range seeds {
 		l := getSeedLocation(&almanac, s)
@@ -46,7 +36,6 @@ func partOne(seeds []int64, almanac [][][]int64) int64 {
 
 func partTwo(seeds []int64, almanac [][][]int64) int64 {
 	seedRanges := groupNumbers(seeds, 2)
-	// dumpArray("seedRanges", seedRanges)
 	var location int64
 	for location = 0; location < 1_000_000_000; location++ {
 		s := getSeedGivenLocation(almanac, location)
@@ -75,7 +64,7 @@ func dumpArray[T any](n string, a []T) {
 
 func getInput() (seeds []int64, almanac [][][]int64) {
 	var content string // the entire file
-	if ba, err := os.ReadFile(dataFile); err != nil {
+	if ba, err := io.ReadAll(os.Stdin); err != nil {
 		panic(err)
 	} else {
 		content = string(ba)
@@ -127,6 +116,5 @@ func groupNumbers(a []int64, s int) [][]int64 {
 	for j := 0; j < len(a)/s; j, i = j+1, i+s {
 		xa[j] = a[i : i+s]
 	}
-	// dumpArray("xa", xa)
 	return xa
 }

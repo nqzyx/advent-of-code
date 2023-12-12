@@ -1,7 +1,8 @@
 go 1.21.3
 
 use (
-	./2016/day01/src
+	./2016/cmd/day01
+	./2016/cmd/day02
 	./2023/cmd/day01/src
 	./2023/cmd/day02/src
 	./2023/cmd/day03/src
