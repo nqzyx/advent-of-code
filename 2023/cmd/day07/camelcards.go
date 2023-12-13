@@ -106,14 +106,8 @@ func NewHand(cardList string, bid int) (hand *Hand) {
 func (h *Hand) CalculateStrength() {
 	matching := make(map[Card]int)
 
-	for i, card1 := range h.Cards {
-		if _, found := matching[card1]; !found {
-			for _, card2 := range h.Cards[i:] {
-				if card2 == card1 {
-					matching[card1]++
-				}
-			}
-		}
+	for _, card1 := range h.Cards {
+		matching[card1]++
 	}
 
 	var pairCount, threeCount, fourCount, fiveCount int
