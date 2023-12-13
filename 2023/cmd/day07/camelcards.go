@@ -13,25 +13,7 @@ const (
 	FiveOfAKind
 )
 
-type Card byte
-
-const (
-	Two Card = '2' + iota
-	Three
-	Four
-	Five
-	Six
-	Seven
-	Eight
-	Nine
-	Ten
-	Jack
-	Queen
-	King
-	Ace
-)
-
-type Cards [5]Card
+type Cards [5]int
 
 type Hand struct {
 	Bid      int
@@ -42,12 +24,22 @@ type Hand struct {
 }
 
 func NewCards(cardList string) (cards *Cards) {
-	for i, c := range cards {
-		if ok := c.(Card); ok {
-			cards[i] = c
-		} else {
+	cards = new(Cards)
+	for i, c := range cardList {
+		switch c {
+		case '2', '3', '4', '5', '6', '7', '8', '9':
+			cards[i] = int(c - '0')
+		case 'T':
+			cards[i] = 10
+		case 'J':
+			cards[i] = 11
+		case 'Q':
+			cards[i] = 12
+		case 'K':
+			cards[i] = 13
+		case 'A':
+			cards[i] = 14
 		}
-		cards[i] = c
 	}
 	return
 }
