@@ -1,3 +1,6 @@
 go 1.21.3
 
-use ./day01/src
+use (
+	./cmd/day01
+	./cmd/day02
+)
