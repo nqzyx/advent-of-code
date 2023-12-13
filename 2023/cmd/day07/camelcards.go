@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+
+	"golang.org/x/exp/slices"
+)
+
 type HandStrength int
 
 const (
@@ -13,10 +20,48 @@ const (
 	FiveOfAKind
 )
 
+func (h HandStrength) String() string {
+	switch h {
+	case HighCard:
+		return "HighCard"
+	case OnePair:
+		return "OnePair"
+	case TwoPair:
+		return "TwoPair"
+	case ThreeOfAKind:
+		return "ThreeOfAKind"
+	case FullHouse:
+		return "FullHouse"
+	case FourOfAKind:
+		return "FourOfAKind"
+	case FiveOfAKind:
+		return "FiveOfAKind"
+	default:
+		return "Unknown"
+	}
+}
+
 type (
 	Card  int
 	Cards [5]Card
 )
+
+func (c Card) String() string {
+	switch c {
+	case 10:
+		return "T"
+	case 11:
+		return "J"
+	case 12:
+		return "Q"
+	case 13:
+		return "K"
+	case 14:
+		return "A"
+	default:
+		return strconv.Itoa(int(c))
+	}
+}
 
 type Hand struct {
 	Bid           int
@@ -62,13 +107,18 @@ func NewHand(cardList string, bid int) (hand *Hand) {
 func (h *Hand) CalculateStrength() {
 	matching := make(map[Card]int)
 
-	for _, card1 := range h.Cards {
-		for _, card2 := range h.Cards {
-			if card2 == card1 {
-				matching[card1]++
+	fmt.Printf("cards: %v\n", h.Cards)
+	for i, card1 := range h.Cards {
+		if _, found := matching[card1]; !found {
+			for _, card2 := range h.Cards[i:] {
+				if card2 == card1 && !found {
+					matching[card1]++
+				}
 			}
 		}
 	}
+
+	fmt.Printf("cards: %v, matching: %v\n", h.Cards, matching)
 
 	var pairCount, threeCount, fourCount, fiveCount int
 	for _, count := range matching {
@@ -100,4 +150,29 @@ func (h *Hand) CalculateStrength() {
 	default:
 		h.Strength = HighCard
 	}
+}
+
+func (g Game) RankHands() {
+	slices.SortFunc(g, func(a *Hand, b *Hand) int {
+		if a.Strength != b.Strength {
+			return int(a.Strength - b.Strength)
+		}
+
+		for i, cardA := range a.Cards {
+			cardB := b.Cards[i]
+			if cardA != cardB {
+				return int(cardA - cardB)
+			}
+		}
+
+		return 0
+	})
+}
+
+func (g Game) CalculateWinnings() (winnings int) {
+	for rank, hand := range g {
+		fmt.Printf("Rank %v: %v\n", rank+1, hand)
+		winnings += hand.Bid * (rank + 1)
+	}
+	return
 }

@@ -13,28 +13,32 @@ import (
 
 var digitsRegexp = regexp.MustCompile("[[:digit:]]+")
 
-func getInput() (hands []*Hand) {
+func getInput() (game Game) {
 	ba, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
 	}
 
-	hands = make([]*Hand, 0, 5)
+	game = make(Game, 0, 5)
 	dataStrings := strings.Split(string(ba), "\n")
 	for _, line := range dataStrings {
+		if len(line) == 0 {
+			continue
+		}
 		tokens := strings.Split(line, " ")
 		bid, _ := strconv.Atoi(tokens[1])
-		hands = append(hands, NewHand(tokens[0], bid))
+		game = append(game, NewHand(tokens[0], bid))
 	}
 	return
 }
 
-func partOne(hands []*Hand) int {
-	return len(hands)
+func partOne(game Game) int {
+	game.RankHands()
+	return game.CalculateWinnings()
 }
 
-func partTwo(hands []*Hand) int {
-	return len(hands)
+func partTwo(game Game) int {
+	return len(game)
 }
 
 func main() {
