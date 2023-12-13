@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 
 	"golang.org/x/exp/slices"
@@ -107,18 +106,15 @@ func NewHand(cardList string, bid int) (hand *Hand) {
 func (h *Hand) CalculateStrength() {
 	matching := make(map[Card]int)
 
-	fmt.Printf("cards: %v\n", h.Cards)
 	for i, card1 := range h.Cards {
 		if _, found := matching[card1]; !found {
 			for _, card2 := range h.Cards[i:] {
-				if card2 == card1 && !found {
+				if card2 == card1 {
 					matching[card1]++
 				}
 			}
 		}
 	}
-
-	fmt.Printf("cards: %v, matching: %v\n", h.Cards, matching)
 
 	var pairCount, threeCount, fourCount, fiveCount int
 	for _, count := range matching {
@@ -171,7 +167,6 @@ func (g Game) RankHands() {
 
 func (g Game) CalculateWinnings() (winnings int) {
 	for rank, hand := range g {
-		fmt.Printf("Rank %v: %v\n", rank+1, hand)
 		winnings += hand.Bid * (rank + 1)
 	}
 	return
