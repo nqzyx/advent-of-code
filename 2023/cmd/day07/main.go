@@ -13,33 +13,28 @@ import (
 
 var digitsRegexp = regexp.MustCompile("[[:digit:]]+")
 
-func getInput() []int {
+func getInput() (hands []*Hand) {
 	ba, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
 	}
+
+	hands = make([]*Hand, 0, 5)
 	dataStrings := strings.Split(string(ba), "\n")
-	time, _ := strconv.Atoi(strings.ReplaceAll(strings.Split(dataStrings[0], ":")[1], " ", ""))
-	distance, _ := strconv.Atoi(strings.ReplaceAll(strings.Split(dataStrings[1], ":")[1], " ", ""))
-	var game []int = []int{
-		time,
-		distance,
+	for _, line := range dataStrings {
+		tokens := strings.Split(line, " ")
+		bid, _ := strconv.Atoi(tokens[1])
+		hands = append(hands, NewHand(tokens[0], bid))
 	}
-	return game
+	return
 }
 
-func partOne(races []int) int {
-	var answer int = 1
-	// for _, r := range races {
-	// 	answer *= countWinners()
-	// 	// fmt.Println("Game:", i, ", Winners:", winners)
-	// }
-	return answer
+func partOne(hands []*Hand) int {
+	return len(hands)
 }
 
-func partTwo(race []int) int {
-	return countWinners(race)
-	// return len(race)
+func partTwo(hands []*Hand) int {
+	return len(hands)
 }
 
 func main() {
@@ -49,7 +44,7 @@ func main() {
 		"Part 2": partTwo(input),
 	}, true)
 	if err == nil {
-		err = utils.WriteStringToFile("./data/answers.json", answersJson)
+		err = utils.WriteStringToFile("./answers.json", answersJson)
 	}
 	if err != nil {
 		fmt.Println(err)
