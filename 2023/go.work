@@ -7,7 +7,7 @@ use (
 	./cmd/day04/src
 	./cmd/day05
 	./cmd/day05/almanac
-	// ./cmd/day05-malciin
+	./cmd/day05-malciin
 	./cmd/day06
 	./cmd/day07
 	./cmd/jsontest
