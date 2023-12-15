@@ -6,8 +6,11 @@ use (
 	./cmd/day03/src
 	./cmd/day04/src
 	./cmd/day05
-	./cmd/day05/almanac
 	./cmd/day05-malciin
+	./cmd/day05/almanac
+	./cmd/day06
+	./cmd/day07
+	./cmd/day07/camelcards
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref

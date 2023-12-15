@@ -1,4 +1,4 @@
-module nqzyx.xyz/advent-of-code/2023/utils
+module nqzyx.xyz/advent-of-code/2023/day07/camelcards
 
 go 1.21.3
 
