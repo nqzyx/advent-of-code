@@ -71,7 +71,7 @@ func WriteStringToFile(filename string, content string) error {
 	var file *os.File
 	var err error
 
-	openFlags := os.O_CREATE + os.O_WRONLY
+	openFlags := os.O_CREATE + os.O_TRUNC + os.O_WRONLY
 
 	if file, err = os.OpenFile(filename, openFlags, os.FileMode(0o777)); err != nil {
 		return err
