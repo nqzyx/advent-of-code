@@ -11,6 +11,7 @@ use (
 	./2023/cmd/day05/almanac
 	./2023/cmd/day06
 	./2023/cmd/day07
+	./2023/cmd/day07/camelcards
 	./2023/internal/utils
 	./2023/internal/xref
 )

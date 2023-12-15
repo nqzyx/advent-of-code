@@ -4,45 +4,37 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"regexp"
-	"strconv"
 	"strings"
 
+	"nqzyx.xyz/advent-of-code/2023/day07/camelcards"
 	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
-var digitsRegexp = regexp.MustCompile("[[:digit:]]+")
-
-func getInput() (game Game) {
+func getInput() []string {
 	ba, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
 	}
-
-	game = make(Game, 0, 5)
-	dataStrings := strings.Split(string(ba), "\n")
-	for _, line := range dataStrings {
-		if len(line) == 0 {
-			continue
-		}
-		tokens := strings.Split(line, " ")
-		bid, _ := strconv.Atoi(tokens[1])
-		game = append(game, NewHand(tokens[0], bid))
-	}
-	return
+	return strings.Split(string(ba), "\n")
 }
 
-func partOne(game Game) int {
-	game.RankHands()
+func partOne(input []string) int64 {
+	jokerRule := false
+	game := camelcards.NewGame(input, jokerRule)
+	utils.WriteJsonToFile("part1_game.json", game, true)
 	return game.CalculateWinnings()
 }
 
-func partTwo(game Game) int {
-	return len(game)
+func partTwo(input []string) int64 {
+	jokerRule := true
+	game := camelcards.NewGame(input, jokerRule)
+	utils.WriteJsonToFile("part2_game.json", game, true)
+	return game.CalculateWinnings()
 }
 
 func main() {
 	input := getInput()
+
 	answersJson, err := utils.JsonStringify(map[string]any{
 		"Part 1": partOne(input),
 		"Part 2": partTwo(input),
@@ -54,23 +46,4 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(answersJson)
-}
-
-func countWinners(r []int) int {
-	var winners int
-	raceTime, raceDistance := r[0], r[1]
-	for holdTime := raceTime / 2; holdTime > 0; holdTime-- {
-		speed := holdTime
-		totalDistance := (raceTime - holdTime) * speed
-		if totalDistance > raceDistance {
-			winners++
-		} else {
-			break
-		}
-	}
-	winners *= 2
-	if raceTime%2 == 0 {
-		winners--
-	}
-	return winners
 }

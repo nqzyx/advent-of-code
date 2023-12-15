@@ -10,6 +10,7 @@ use (
 	./cmd/day05/almanac
 	./cmd/day06
 	./cmd/day07
+	./cmd/day07/camelcards
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref
