@@ -10,7 +10,7 @@ func (c Card) String() string {
 	switch c {
 	case 10:
 		return "T"
-	case 0, 11:
+	case 11, 0: // 0 when JokerRule is in force...
 		return "J"
 	case 12:
 		return "Q"
@@ -34,7 +34,7 @@ func NewCards(cardList string, jokerRule bool) (cards *Cards) {
 		case 'T':
 			cards[i] = 10
 		case 'J':
-			if jokerRule {
+			if jokerRule { // handle the Joker Rule
 				cards[i] = 0
 			} else {
 				cards[i] = 11

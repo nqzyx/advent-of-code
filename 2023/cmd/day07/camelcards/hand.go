@@ -14,23 +14,26 @@ type Hands []*Hand
 
 func NewHand(cardList string, bid int, jokerRule bool) (hand *Hand) {
 	hand = &Hand{
-		Bid:           bid,
-		CardList:      cardList,
-		Cards:         *NewCards(cardList, jokerRule),
-		MatchingCards: make(map[Card]int),
+		Bid:      bid,
+		CardList: cardList,
+		Cards:    *NewCards(cardList, jokerRule),
 	}
-	hand.CalculateStrength()
+	hand.Evaluate()
 	return
 }
 
-func (h *Hand) CalculateStrength() {
-	for _, card := range h.Cards {
-		if card == 0 {
-			h.JokerCount++
-		} else {
-			h.MatchingCards[card]++
-		}
+func (c *Cards) FindMatchingCards() (matchingCards map[Card]int) {
+	matchingCards = make(map[Card]int)
+	for _, card := range c {
+		matchingCards[card]++
 	}
+	return
+}
+
+func (h *Hand) Evaluate() (hs HandStrength) {
+	h.MatchingCards = h.Cards.FindMatchingCards()
+	h.JokerCount = h.MatchingCards[0]
+	delete(h.MatchingCards, 0)
 
 	cardGroupCounts := make(map[int]int)
 	for _, count := range h.MatchingCards {
@@ -39,57 +42,61 @@ func (h *Hand) CalculateStrength() {
 
 	switch true {
 	case cardGroupCounts[5] == 1:
-		h.Strength = FiveOfAKind
+		hs = FiveOfAKind
 	case cardGroupCounts[4] == 1:
 		switch h.JokerCount {
-		case 1:
-			h.Strength = FiveOfAKind
 		case 0:
-			h.Strength = FourOfAKind
+			hs = FourOfAKind
+		case 1:
+			hs = FiveOfAKind
 		}
 	case cardGroupCounts[3] == 1 && cardGroupCounts[2] == 1:
-		h.Strength = FullHouse
+		hs = FullHouse
 	case cardGroupCounts[3] == 1:
 		switch h.JokerCount {
-		case 2:
-			h.Strength = FiveOfAKind
-		case 1:
-			h.Strength = FourOfAKind
 		case 0:
-			h.Strength = ThreeOfAKind
+			hs = ThreeOfAKind
+		case 1:
+			hs = FourOfAKind
+		case 2:
+			hs = FiveOfAKind
 		}
 	case cardGroupCounts[2] == 2:
 		switch h.JokerCount {
-		case 1:
-			h.Strength = FullHouse
 		case 0:
-			h.Strength = TwoPair
+			hs = TwoPair
+		case 1:
+			hs = FullHouse
 		}
 	case cardGroupCounts[2] == 1:
 		switch h.JokerCount {
-		case 3:
-			h.Strength = FiveOfAKind
-		case 2:
-			h.Strength = FourOfAKind
-		case 1:
-			h.Strength = ThreeOfAKind
 		case 0:
-			h.Strength = OnePair
+			hs = OnePair
+		case 1:
+			hs = ThreeOfAKind
+		case 2:
+			hs = FourOfAKind
+		case 3:
+			hs = FiveOfAKind
+		}
+	case cardGroupCounts[1] == 5:
+		switch h.JokerCount {
+		case 0:
+			hs = HighCard
+		case 1:
+			hs = OnePair
+		case 2:
+			hs = ThreeOfAKind
+		case 3:
+			hs = FourOfAKind
+		case 4, 5:
+			hs = FiveOfAKind
 		}
 	default:
-		switch h.JokerCount {
-		case 4, 5:
-			h.Strength = FiveOfAKind
-		case 3:
-			h.Strength = FourOfAKind
-		case 2:
-			h.Strength = ThreeOfAKind
-		case 1:
-			h.Strength = OnePair
-		case 0:
-			h.Strength = HighCard
-		}
+		hs = HighCard
 	}
+	h.Strength = hs
+	return
 }
 
 func (h *Hand) CalculateWinnings(rank int) int64 {
