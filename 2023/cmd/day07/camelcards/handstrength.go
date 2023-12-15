@@ -3,14 +3,13 @@ package camelcards
 type HandStrength int
 
 const (
-	_ HandStrength = iota
-	HighCard
-	OnePair
-	TwoPair
-	ThreeOfAKind
-	FullHouse
-	FourOfAKind
-	FiveOfAKind
+	HighCard     HandStrength = 10
+	OnePair      HandStrength = 20
+	TwoPair      HandStrength = 22
+	ThreeOfAKind HandStrength = 30
+	FullHouse    HandStrength = 32
+	FourOfAKind  HandStrength = 40
+	FiveOfAKind  HandStrength = 50
 )
 
 func (h HandStrength) String() string {

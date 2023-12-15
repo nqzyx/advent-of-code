@@ -49,3 +49,10 @@ func NewCards(cardList string, jokerRule bool) (cards *Cards) {
 	}
 	return
 }
+
+func (c *Cards) Value() (value int64) {
+	for _, card := range c {
+		value = (value * 100) + int64(card)
+	}
+	return
+}

@@ -8,6 +8,7 @@ type Hand struct {
 	Winnings      int64
 	MatchingCards map[Card]int
 	JokerCount    int
+	Rank          int
 }
 
 type Hands []*Hand
@@ -80,26 +81,26 @@ func (h *Hand) Evaluate() (hs HandStrength) {
 			hs = FiveOfAKind
 		}
 	case cardGroupCounts[1] == 5:
+		hs = HighCard
+	default:
 		switch h.JokerCount {
-		case 0:
-			hs = HighCard
-		case 1:
-			hs = OnePair
-		case 2:
-			hs = ThreeOfAKind
-		case 3:
-			hs = FourOfAKind
 		case 4, 5:
 			hs = FiveOfAKind
+		case 3:
+			hs = FourOfAKind
+		case 2:
+			hs = ThreeOfAKind
+		case 1:
+			hs = OnePair
+		default:
+			hs = HighCard
 		}
-	default:
-		hs = HighCard
 	}
 	h.Strength = hs
 	return
 }
 
-func (h *Hand) CalculateWinnings(rank int) int64 {
-	h.Winnings = int64(h.Bid * (rank + 1))
+func (h *Hand) CalculateWinnings() int64 {
+	h.Winnings = int64(h.Bid * h.Rank)
 	return h.Winnings
 }

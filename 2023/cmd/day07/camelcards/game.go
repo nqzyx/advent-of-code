@@ -36,23 +36,19 @@ func (g *Game) RankHands() {
 		if a.Strength != b.Strength {
 			return int(a.Strength - b.Strength)
 		}
-
-		for i, cardA := range a.Cards {
-			cardB := b.Cards[i]
-			if cardA != cardB {
-				return int(cardA - cardB)
-			}
-		}
-
-		return 0
+		return int(a.Cards.Value() - b.Cards.Value())
 	})
+
+	for rank, hand := range g.Hands {
+		hand.Rank = rank + 1
+	}
 }
 
 func (g *Game) CalculateWinnings() int64 {
 	g.RankHands()
 	var winnings int64
-	for rank, hand := range g.Hands {
-		winnings += hand.CalculateWinnings(rank)
+	for _, hand := range g.Hands {
+		winnings += hand.CalculateWinnings()
 	}
 	g.TotalWinnings = winnings
 
