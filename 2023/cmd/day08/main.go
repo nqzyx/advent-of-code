@@ -8,9 +8,9 @@ import (
 )
 
 func partOne(input []string) (moves int) {
-	nodeMap := nodemap.NewMap(input[1:])
+	nodeMap := nodemap.New(input[1:])
 	var err error
-	if moves, err = nodeMap.CountMoves("AAA", "ZZZ", input[0]); err != nil {
+	if moves, err = nodeMap.CountMoves(input[0], "AAA", "ZZZ"); err != nil {
 		panic(err)
 	}
 	return moves
