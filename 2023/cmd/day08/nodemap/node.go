@@ -10,7 +10,11 @@ type Node struct {
 	Right string
 }
 
+
 func NewNode(name, left, right string) *Node {
+	if name == "" || left == "" || right == "" {
+		return &Node{}
+	}
 	return &Node{
 		Name:  name,
 		Left:  left,
