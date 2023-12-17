@@ -3,6 +3,7 @@
         "camelcards",
         "dijkstrajs",
         "farmdata",
+        "nodemap",
         "nqzyx"
     ],
     "gopls": {
