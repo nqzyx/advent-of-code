@@ -11,6 +11,8 @@ use (
 	./cmd/day06
 	./cmd/day07
 	./cmd/day07/camelcards
+	./cmd/day08
+	./cmd/day08/nodemap
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref
