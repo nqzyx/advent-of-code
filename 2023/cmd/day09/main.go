@@ -9,7 +9,7 @@ import (
 func main() {
 	input := utils.GetInput()
 
-	answers := make(map[string]map[string]any, 2);
+	answers := make(map[string]map[string]any, 2)
 
 	var answer map[string]any
 
@@ -39,16 +39,16 @@ func main() {
 	}
 }
 
-func partOne(input []string)  (moves int, err error) {
-	// fmt.Println("partOne: Beginning")  
-	// defer fmt.Println("partOne: Finished")
+func partOne(input []string) (moves int, err error) {
+	fmt.Println("partOne: Beginning")
+	defer fmt.Println("partOne: Finished")
 
 	return len(input), nil
 }
 
 func partTwo(input []string) (moves int, err error) {
-	// fmt.Println("partTwo: Beginning")
-	// defer fmt.Println("partTwo: Finished")
+	fmt.Println("partTwo: Beginning")
+	defer fmt.Println("partTwo: Finished")
 
 	return len(input), nil
 }
