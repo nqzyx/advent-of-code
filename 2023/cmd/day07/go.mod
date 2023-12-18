@@ -4,7 +4,7 @@ replace nqzyx.xyz/advent-of-code/2023/day07/camelcards => ./camelcards
 
 replace nqzyx.xyz/advent-of-code/2023/utils => ../../internal/utils
 
-go 1.21.3
+go 1.21.5
 
 require (
 	nqzyx.xyz/advent-of-code/2023/day07/camelcards v0.0.0-00010101000000-000000000000

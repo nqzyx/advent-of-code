@@ -1,6 +1,6 @@
 module nqzyx.xyz/advent-of-code/2023/day05
 
-go 1.21.3
+go 1.21.5
 
 replace nqzyx.xyz/advent-of-code/2023/utils => ../../internal/utils
 

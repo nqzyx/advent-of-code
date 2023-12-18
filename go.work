@@ -1,4 +1,4 @@
-go 1.21.3
+go 1.21.5
 
 use (
 	./2016/cmd/day01
@@ -14,6 +14,7 @@ use (
 	./2023/cmd/day07/camelcards
 	./2023/cmd/day08
 	./2023/cmd/day08/nodemap
+	./2023/cmd/day09
 	./2023/internal/utils
 	./2023/internal/xref
 )

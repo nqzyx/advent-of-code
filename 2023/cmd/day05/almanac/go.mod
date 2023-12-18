@@ -1,6 +1,6 @@
 module nqzyx.xyz/advent-of-code/2023/day05/almanac
 
-go 1.21.3
+go 1.21.5
 
 require (
 	nqzyx.xyz/advent-of-code/2023/utils v0.0.0-00010101000000-000000000000
