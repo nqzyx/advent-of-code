@@ -14,6 +14,7 @@ use (
 	./cmd/day08
 	./cmd/day08/nodemap
 	./cmd/day09
+	./cmd/day09/oasis
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref
