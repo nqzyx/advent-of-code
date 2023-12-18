@@ -8,7 +8,7 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-var integerRegexp = regexp.MustCompile("[[:digit:]]+")
+var integerRegexp = regexp.MustCompile("[+-]?[[:digit:]]+")
 
 func NewIntArrayFromString[T constraints.Integer](s string) (result []T) {
 	s = strings.TrimSpace(s)
