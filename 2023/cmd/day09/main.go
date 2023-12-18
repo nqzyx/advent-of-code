@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"nqzyx.xyz/advent-of-code/2023/day09/oasis"
 	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
@@ -43,7 +44,8 @@ func partOne(input []string) (moves int, err error) {
 	fmt.Println("partOne: Beginning")
 	defer fmt.Println("partOne: Finished")
 
-	return len(input), nil
+	report := oasis.NewReport(input)
+	return report.PredictionTotal, nil
 }
 
 func partTwo(input []string) (moves int, err error) {
