@@ -36,7 +36,7 @@ func getInputData() (inputData []string) {
 
 func partOne() (answer uint64) {
 	almanac := almanac.NewAlmanac(getInputData(), true)
-	if err := utils.WriteJsonToFile("./data/almanac.json", almanac, true); err != nil {
+	if err := utils.WriteJSONToFile("./data/almanac.json", almanac, true); err != nil {
 		fmt.Println(err)
 	}
 	closestLocation := uint64(math.MaxUint64)
@@ -53,7 +53,7 @@ func partOne() (answer uint64) {
 
 func partTwo() (answer uint64) {
 	almanac := almanac.NewAlmanac(getInputData(), false)
-	if err := utils.WriteJsonToFile("./data/almanac.json", almanac, true); err != nil {
+	if err := utils.WriteJSONToFile("./data/almanac.json", almanac, true); err != nil {
 		fmt.Println(err)
 	}
 	closestLocation := uint64(math.MaxUint64)
@@ -71,7 +71,7 @@ func partTwo() (answer uint64) {
 }
 
 func main() {
-	answersJson, err := utils.JsonStringify(map[string]any{
+	answersJson, err := utils.JSONStringify(map[string]any{
 		"Part 1": partOne(),
 		"Part 2": partTwo(),
 	}, true)
