@@ -64,7 +64,7 @@ func main() {
 	answers["part2"] = answer
 
 	pleaseIndent := true
-	if answersAsJson, err := utils.JsonStringify(answers, pleaseIndent); err != nil {
+	if answersAsJson, err := utils.JSONStringify(answers, pleaseIndent); err != nil {
 		panic(err)
 	} else {
 		utils.WriteStringToFile("./answers.txt", answersAsJson)

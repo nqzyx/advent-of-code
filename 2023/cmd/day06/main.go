@@ -44,7 +44,7 @@ func partTwo(race []int) int {
 
 func main() {
 	input := getInput()
-	answersJson, err := utils.JsonStringify(map[string]any{
+	answersJson, err := utils.JSONStringify(map[string]any{
 		"Part 1": partOne(input),
 		"Part 2": partTwo(input),
 	}, true)

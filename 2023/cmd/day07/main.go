@@ -21,21 +21,21 @@ func getInput() []string {
 func partOne(input []string) int64 {
 	jokerRule := false
 	game := camelcards.NewGame(input, jokerRule)
-	utils.WriteJsonToFile("part1_game.json", game, true)
+	utils.WriteJSONToFile("part1_game.json", game, true)
 	return game.CalculateWinnings()
 }
 
 func partTwo(input []string) int64 {
 	jokerRule := true
 	game := camelcards.NewGame(input, jokerRule)
-	utils.WriteJsonToFile("part2_game.json", game, true)
+	utils.WriteJSONToFile("part2_game.json", game, true)
 	return game.CalculateWinnings()
 }
 
 func main() {
 	input := getInput()
 
-	answersJson, err := utils.JsonStringify(map[string]any{
+	answersJson, err := utils.JSONStringify(map[string]any{
 		"Part 1": partOne(input),
 		"Part 2": partTwo(input),
 	}, true)
