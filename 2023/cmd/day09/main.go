@@ -9,48 +9,43 @@ import (
 
 func main() {
 	input := utils.GetInput()
+	report := oasis.NewReport(input)
 
-	answers := make(map[string]map[string]any, 2)
+	answers := make(map[string]any, 2)
 
-	var answer map[string]any
-
-	answer = make(map[string]any)
-	if moves, err := partOne(input); err == nil {
-		answer["moves"] = moves
+	if result, err := partOne(report); err == nil {
+		answers["part1"] = result
 	} else {
-		answer["err"] = err
+		answers["part1"] = err
 	}
-	answers["part1"] = answer
-
-	answer = make(map[string]any)
-	if moves, err := partTwo(input); err == nil {
-		answer["moves"] = moves
+	if result, err := partTwo(report); err == nil {
+		answers["part2"] = result
 	} else {
-		answer["err"] = err
+		answers["part2"] = err
 	}
-	answers["part2"] = answer
 
 	pleaseIndent := true
 
-	if answersAsJson, err := utils.JsonStringify(answers, pleaseIndent); err != nil {
+	if answersAsJson, err := utils.JSONStringify(answers, pleaseIndent); err != nil {
 		panic(err)
 	} else {
-		utils.WriteStringToFile("./answers.txt", answersAsJson)
+		utils.WriteStringToFile("./answers.json", answersAsJson)
 		fmt.Println(answersAsJson)
 	}
 }
 
-func partOne(input []string) (moves int, err error) {
-	fmt.Println("partOne: Beginning")
-	defer fmt.Println("partOne: Finished")
+func partOne(report *oasis.Report) (moves int, err error) {
+	// fmt.Println("partOne: Beginning")
+	// defer fmt.Println("partOne: Finished")
 
-	report := oasis.NewReport(input)
-	return report.PredictionTotal, nil
+	// utils.WriteJSONToFile("./report.json", report, true)
+	return report.PredictionTotals.Next, nil
 }
 
-func partTwo(input []string) (moves int, err error) {
-	fmt.Println("partTwo: Beginning")
-	defer fmt.Println("partTwo: Finished")
+func partTwo(report *oasis.Report) (moves int, err error) {
+	// fmt.Println("partTwo: Beginning")
+	// defer fmt.Println("partTwo: Finished")
 
-	return len(input), nil
+	// utils.WriteJSONToFile("./report.json", report, true)
+	return report.PredictionTotals.Previous, nil
 }

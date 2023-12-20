@@ -1,30 +1,65 @@
 package oasis
 
-type Analysis []int
-
-type Analyses []Analysis
-
-func (a Analysis) isFinalAnalysis() (result bool) {
-	if len(a) == 0 {
-		return true
+type Analysis struct{
+	Intervals []int
+	Predictions struct{
+		Previous int
+		Next int
 	}
-	initialValue := a[0]
-	result = true
-	for _, i := range a[1:] {
-		result = result && i == initialValue
+}
+
+type Analyses []*Analysis
+
+func NewAnalysis(length int) (a *Analysis) {
+	return &Analysis{Intervals: make([]int, length)}
+}
+
+func NewAnalysisInitialized(intervals []int) (a *Analysis) {
+	a = NewAnalysis(len(intervals))
+	copy(a.Intervals, intervals)
+	return 
+}
+
+func (prev Analysis) NextAnalysis() (next *Analysis) {
+	if prev.isFinal() {
+		return nil
+	}
+	next = &Analysis{ Intervals: make([]int, 0, len(prev.Intervals) - 1) }
+	for i := 0; i < len(prev.Intervals) -1; i++ {
+		next.Intervals = append(next.Intervals, prev.Intervals[i+1]-prev.Intervals[i])
 	}
 	return
 }
 
-func (a Analysis) getNextAnalysis() (next Analysis, isFinal bool) {
-	if len(a) == 0 || a.isFinalAnalysis() {
-		return nil, true
+func (a Analysis) isFinal() (result bool) {
+	if a.Intervals == nil || len(a.Intervals) == 0 {
+		return true
 	}
+	for _, value := range a.Intervals[1:] {
+		if value != a.Intervals[0] {
+			return false
+		}
+	}
+	return true
+}
 
-	next = make(Analysis, 0, len(a)-1)
-
-	for i := 0; i < len(a)-1; i++ {
-		next = append(next, a[i+1]-a[i])
+func (aList *Analyses) Analyze() (prev int, next int) {
+	if aList == nil || len(*aList) == 0 {
+		return
+	}
+	lastIndex := len(*aList) - 1
+	for i := lastIndex; i >= 0; i-- {
+		thisA := (*aList)[i]
+		if i == lastIndex {
+			thisA.Predictions.Previous = thisA.Intervals[0]
+			thisA.Predictions.Next = thisA.Intervals[len(thisA.Intervals) -1]
+		} else {
+			nextA := (*aList)[i + 1]
+			thisA.Predictions.Previous = thisA.Intervals[0] - nextA.Predictions.Previous
+			thisA.Predictions.Next = thisA.Intervals[len(thisA.Intervals)-1] + nextA.Predictions.Next
+		}
+		prev += thisA.Predictions.Previous
+		next += thisA.Predictions.Next
 	}
 	return
 }

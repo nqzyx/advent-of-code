@@ -6,7 +6,10 @@ import (
 
 type Report struct {
 	ValueHistories  []*ValueHistory
-	PredictionTotal int
+	PredictionTotals struct {
+		Next int
+		Previous int
+	}
 }
 
 func NewReport(reportInput []string) (newReport *Report) {
@@ -23,7 +26,8 @@ func NewReport(reportInput []string) (newReport *Report) {
 	}
 
 	for _, h := range newReport.ValueHistories {
-		newReport.PredictionTotal += h.Prediction
+		newReport.PredictionTotals.Next += h.Predictions.Next
+		newReport.PredictionTotals.Previous += h.Predictions.Previous
 	}
 
 	return

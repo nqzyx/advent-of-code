@@ -1,15 +1,16 @@
 package oasis
 
 import (
-	"fmt"
-
 	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
 type ValueHistory struct {
 	Readings   []int
 	Analyses   Analyses
-	Prediction int
+	Predictions struct {
+		Previous int
+		Next int
+	}
 }
 
 func NewValueHistory(valueList string) (result *ValueHistory) {
@@ -21,31 +22,32 @@ func NewValueHistory(valueList string) (result *ValueHistory) {
 	return
 }
 
-func (h *ValueHistory) setPrediction() {
-	fmt.Println("valueHistory:", h.Analyses)
-	h.Prediction = 0
-	for _, a := range h.Analyses {
-		h.Prediction += a[len(a)-1]
-	}
+func (h *ValueHistory) setPredictions() {
+	h.Predictions.Next = h.Analyses[0].Predictions.Next
+	h.Predictions.Previous = h.Analyses[0].Predictions.Previous
 }
 
-func (h *ValueHistory) Analyze() {
-	if h == nil || len(h.Readings) == 0 {
+func (vh *ValueHistory) Analyze() {
+	if vh == nil || len(vh.Readings) == 0 {
 		return
 	}
-	h.Analyses = make(Analyses, 0, len(h.Readings)/2)
 
-	h.Analyses = append(h.Analyses, Analysis(h.Readings))
-	current := h.Analyses[0]
-
+	vh.Analyses = make(Analyses, 0, len(vh.Readings))
+	currentAnalysis := NewAnalysisInitialized(vh.Readings)
+	vh.Analyses = append(vh.Analyses, currentAnalysis)
+	
 	for {
-		var final bool
-		if current, final = current.getNextAnalysis(); !final {
-			h.Analyses = append(h.Analyses, current)
-		} else {
+		if nextAnalysis := currentAnalysis.NextAnalysis(); nextAnalysis == nil {
 			break
-		}
+		} else {
+			vh.Analyses = append(vh.Analyses, nextAnalysis)		
+			currentAnalysis = NewAnalysisInitialized(nextAnalysis.Intervals)
+		} 
 	}
 
-	h.setPrediction()
+	vh.Analyses.Analyze()
+
+	vh.setPredictions()
+	
+	utils.PrintlnJSON(vh, false)
 }
