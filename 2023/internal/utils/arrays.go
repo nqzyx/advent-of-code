@@ -1,10 +1,11 @@
 package utils
 
 func Reverse[T any](a []T) []T {
-	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
-		a[i], a[j] = a[j], a[i]
+	newA := make([]T, 0, len(a))
+	for i, j := 0, len(a)-1; i < len(a)-1; i, j = i+1, j-1 {
+		newA[i] = a[j]
 	}
-	return a
+	return newA
 }
 
 func Insert[T any](a []T, c T, i int) []T {
