@@ -49,5 +49,5 @@ func (vh *ValueHistory) Analyze() {
 
 	vh.setPredictions()
 	
-	utils.PrintlnJSON(vh, false)
+	// utils.PrintlnJSON(vh, false)
 }
