@@ -3,15 +3,17 @@ package main
 import (
 	"fmt"
 
+	"nqzyx.xyz/advent-of-code/2023/day10/pipes"
 	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
 func main() {
 	input := utils.GetInput()
+	pipeMap := pipes.NewMap(input)
 
 	answers := make(map[string]any, 2)
 
-	if result, err := partOne(input); err == nil {
+	if result, err := partOne(pipeMap); err == nil {
 		answers["part1"] = result
 	} else {
 		answers["part1"] = err
@@ -32,12 +34,13 @@ func main() {
 	}
 }
 
-func partOne(input []string) (moves int, err error) {
-	// fmt.Println("partOne: Beginning")
-	// defer fmt.Println("partOne: Finished")
+func partOne(m *pipes.Map) (moves int, err error) {
+	fmt.Println("partOne: Beginning")
+	utils.PrintlnJSON(m, true)
+	defer fmt.Println("partOne: Finished")
 
 	// utils.WriteJSONToFile("./report.json", report, true)
-	return len(input), nil
+	return m.GetPathLength(), nil
 }
 
 func partTwo(input []string) (moves int, err error) {
