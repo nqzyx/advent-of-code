@@ -1,4 +1,4 @@
-go 1.21.3
+go 1.21.5
 
 use (
 	./cmd/day01/src
@@ -15,6 +15,7 @@ use (
 	./cmd/day08/nodemap
 	./cmd/day09
 	./cmd/day09/oasis
+	./cmd/day10
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref

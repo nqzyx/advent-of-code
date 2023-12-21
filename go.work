@@ -16,6 +16,7 @@ use (
 	./2023/cmd/day08/nodemap
 	./2023/cmd/day09
 	./2023/cmd/day09/oasis
+	./2023/cmd/day10
 	./2023/internal/utils
 	./2023/internal/xref
 )
