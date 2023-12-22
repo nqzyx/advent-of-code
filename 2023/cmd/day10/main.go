@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"nqzyx.xyz/advent-of-code/2023/day10/pipes"
 	"nqzyx.xyz/advent-of-code/2023/utils"
 )
@@ -54,6 +56,7 @@ func partTwo(m *pipes.Map) (length int, err error) {
 	// defer fmt.Println("partTwo: Finished")
 
 	length = len(*m.Insiders)
-	utils.PrintlnJSON(*m.Insiders, false)
+	fmt.Println("Insiders:", *m.Insiders)
+	// utils.PrintlnJSON(*m.Insiders, false)
 	return
 }
