@@ -1,30 +1,32 @@
 package pipes
 
-type Pipe rune
+type PipeType rune
 
 const (
-	NS    Pipe = '|'
-	EW    Pipe = '-'
-	NE    Pipe = 'L'
-	SE    Pipe = 'F'
-	SW    Pipe = '7'
-	NW    Pipe = 'J'
-	Start Pipe = 'S'
-	Empty Pipe = '.'
+	NorthSouth  PipeType = '|'
+	EastWest    PipeType = '-'
+	NorthEast   PipeType = 'L'
+	SouthEast   PipeType = 'F'
+	SouthWest   PipeType = '7'
+	NorthWest   PipeType = 'J'
+	StarterPipe PipeType = 'S'
+	NoPipe      PipeType = '.'
 )
 
 type (
-	PipeConnections map[Pipe]Connections
-	Connections     struct {
-		North, South, East, West bool
-	}
+	Connections map[PipeType]Directions
 )
 
-var pipeConnections PipeConnections = PipeConnections{
-	EW: Connections{East: true, West: true},
-	NE: Connections{North: true, East: true},
-	NS: Connections{North: true, South: true},
-	NW: Connections{North: true, West: true},
-	SE: Connections{South: true, East: true},
-	SW: Connections{South: true, West: true},
+func (t PipeType) ConnectsTo(d Direction) bool {
+	connections := map[PipeType]Directions{
+		EastWest:    {East: true, West: true},
+		NorthEast:   {North: true, East: true},
+		NorthSouth:  {North: true, South: true},
+		NorthWest:   {North: true, West: true},
+		SouthEast:   {South: true, East: true},
+		SouthWest:   {South: true, West: true},
+		StarterPipe: {North: true, South: true, East: true, West: true},
+		NoPipe:      {},
+	}
+	return connections[t][d]
 }

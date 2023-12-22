@@ -9,44 +9,59 @@ import (
 
 func main() {
 	input := utils.GetInput()
-	pipeMap := pipes.NewMap(input)
 
-	answers := make(map[string]any, 2)
+	var pipeMap *pipes.Map
+	var err error
 
-	if result, err := partOne(pipeMap); err == nil {
-		answers["part1"] = result
-	} else {
-		answers["part1"] = err
+	if pipeMap, err = pipes.NewMap(input); err != nil {
+		panic(err)
 	}
-	if result, err := partTwo(input); err == nil {
-		answers["part2"] = result
-	} else {
-		answers["part2"] = err
+
+	answers := map[string]any{
+		"part1": func() any {
+			if result, err := partOne(pipeMap); err != nil {
+				return map[string]any{
+					"err": err,
+				}
+			} else {
+				return map[string]any{
+					"result": result,
+				}
+			}
+		}(),
+		"part2": func() any {
+			if result, err := partTwo(pipeMap); err != nil {
+				return err
+			} else {
+				return result
+			}
+		}(),
 	}
 
 	pleaseIndent := true
 
-	if answersAsJson, err := utils.JSONStringify(answers, pleaseIndent); err != nil {
-		panic(err)
+	utils.WriteJSONToFile("./answers.json", answers, pleaseIndent)
+	utils.PrintlnJSON(answers, pleaseIndent)
+}
+
+func partOne(m *pipes.Map) (length int, err error) {
+	fmt.Println("partOne: Beginning")
+	defer fmt.Println("partOne: Finished")
+
+	// utils.PrintlnJSON(m, true)
+
+	// utils.WriteJSONToFile("./report.json", report, true)
+	if length, err := m.FindPathLength(); err != nil {
+		return 0, err
 	} else {
-		utils.WriteStringToFile("./answers.json", answersAsJson)
-		fmt.Println(answersAsJson)
+		return length, nil
 	}
 }
 
-func partOne(m *pipes.Map) (moves int, err error) {
-	fmt.Println("partOne: Beginning")
-	utils.PrintlnJSON(m, true)
-	defer fmt.Println("partOne: Finished")
-
-	// utils.WriteJSONToFile("./report.json", report, true)
-	return m.GetPathLength(), nil
-}
-
-func partTwo(input []string) (moves int, err error) {
+func partTwo(m *pipes.Map) (length int, err error) {
 	// fmt.Println("partTwo: Beginning")
 	// defer fmt.Println("partTwo: Finished")
 
 	// utils.WriteJSONToFile("./report.json", report, true)
-	return len(input), nil
+	return m.Rows * m.Cols, nil
 }
