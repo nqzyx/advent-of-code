@@ -3,116 +3,161 @@ package pipes
 import (
 	"fmt"
 	"strings"
+
+	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
 type Map struct {
-	Rows      int
-	Cols      int
-	StartTile Tile
-	Tiles     [][]Tile
-	Path      []Tile
+	RowCount int
+	ColCount int
+	Grid     TileGrid
+	Path     TilePath
+	Insiders []Tile
 }
 
-func NewMap(mapRows []string) (m *Map, err error) {
-	startTileFound := false
+func NewMap(inputRows []string) (m *Map, err error) {
 	m = new(Map)
-	m.Tiles = make([][]Tile, 0, len(mapRows))
-	m.Cols = len(mapRows[0])
-	for r, mapRow := range mapRows {
-		if mapRow = strings.TrimSpace(mapRow); len(mapRow) == 0 {
+	m.ColCount = len(inputRows[0])
+	m.Grid = make(TileGrid, 0, len(inputRows))
+	m.Path = make(TilePath, 0, len(inputRows))
+	for iRow, inputRow := range inputRows {
+		if inputRow = strings.TrimSpace(inputRow); len(inputRow) == 0 {
 			continue
 		}
-		if m.Cols != len(mapRow) {
-			return nil, fmt.Errorf("all rows must have the same number of columns. Expected %v, found %v", m.Cols, len(mapRow))
+		if m.ColCount != len(inputRow) {
+			return nil, fmt.Errorf("all rows must have the same number of columns. Expected %v, found %v", m.ColCount, len(inputRow))
 		}
-		row := make([]Tile, 0, len(mapRow))
-		for c, colData := range mapRow {
-			tile := *NewTile(c, r, PipeType(colData))
-			row = append(row, tile)
-			if tile.PipeType == StarterPipe {
-				m.StartTile = tile
-				startTileFound = true
+		theRow := make(TileRow, 0, len(inputRow))
+		for iCol, inputCol := range inputRow {
+			theTile := *NewTile(iRow, iCol, PipeType(inputCol))
+			if PipeType(inputCol) == StarterPipe {
+				theTile.PathPosition = OnPath
+				m.Path = append(m.Path, theTile)
 			}
+			theRow = append(theRow, theTile)
 		}
-		m.Tiles = append(m.Tiles, row)
+		m.Grid = append(m.Grid, theRow)
 	}
 
-	if !startTileFound {
-		return nil, fmt.Errorf("no start tile found for map")
+	if starterTilesCount := len(m.Path); starterTilesCount != 1 {
+		return nil, fmt.Errorf("a map must have 1 start tile, not %v", starterTilesCount)
 	}
 
-	m.Rows = len(m.Tiles)
+	m.RowCount = len(m.Grid)
+
+	if err := m.FindPath(); err != nil {
+		return nil, err
+	}
+
+	// utils.PrintlnJSON(m, false)
 
 	return m, nil
 }
 
-func (m *Map) GetConnectingTiles(incomingDirection Direction, tile Tile) (map[Direction]Tile, error) {
+func (m *Map) DistanceToFarthestTile() int {
+	if m == nil || m.Path == nil {
+		return 0
+	}
+	return len(m.Path) / 2
+}
+
+func (m *Map) GetConnectedTiles(entryDirection Direction, currentTile Tile) map[Direction]Tile {
 	neighbors := make(map[Direction]Tile)
-	switch true {
-	case incomingDirection != North && tile.ConnectsTo(North) && tile.Row() > 0:
-		if neighbor := m.Tiles[tile.Row()-1][tile.Col()]; neighbor.ConnectsTo(South) {
+
+	if entryDirection != North && currentTile.ConnectsTo(North) && currentTile.Row() > 0 {
+		if neighbor := m.Grid[currentTile.Row()-1][currentTile.Col()]; neighbor.ConnectsTo(South) {
 			neighbors[South] = neighbor
 		}
-	case incomingDirection != South && tile.ConnectsTo(South) && tile.Row() < m.Rows-1:
-		if neighbor := m.Tiles[tile.Row()+1][tile.Col()]; neighbor.ConnectsTo(North) {
+	}
+	if entryDirection != South && currentTile.ConnectsTo(South) && currentTile.Row() < m.RowCount-1 {
+		if neighbor := m.Grid[currentTile.Row()+1][currentTile.Col()]; neighbor.ConnectsTo(North) {
 			neighbors[North] = neighbor
 		}
-	case incomingDirection != East && tile.ConnectsTo(East) && tile.Col() < m.Cols-1:
-		if neighbor := m.Tiles[tile.Row()][tile.Col()+1]; neighbor.ConnectsTo(West) {
+	}
+	if entryDirection != East && currentTile.ConnectsTo(East) && currentTile.Col() < m.ColCount-1 {
+		if neighbor := m.Grid[currentTile.Row()][currentTile.Col()+1]; neighbor.ConnectsTo(West) {
 			neighbors[West] = neighbor
 		}
-	case incomingDirection != West && tile.ConnectsTo(West) && tile.Col() > 0:
-		if neighbor := m.Tiles[tile.Row()][tile.Col()-1]; neighbor.ConnectsTo(East) {
+	}
+	if entryDirection != West && currentTile.ConnectsTo(West) && currentTile.Col() > 0 {
+		if neighbor := m.Grid[currentTile.Row()][currentTile.Col()-1]; neighbor.ConnectsTo(East) {
 			neighbors[East] = neighbor
 		}
 	}
 
-	delete(neighbors, incomingDirection)
-
-	switch len(neighbors) {
-	case 0:
-		return nil, fmt.Errorf("tile %v does not have any connecting tiles", tile)
-	case 1, 2:
-		return neighbors, nil
-	default:
-		return nil, fmt.Errorf("a tile must only have no more than two (2) connecting tiles, not %v", len(neighbors))
+	if len(neighbors) > 0 {
+		return neighbors
+	} else {
+		return nil
 	}
 }
 
-func (m *Map) FindPathLength() (int, error) {
-	m.Path = make([]Tile, 0, m.Rows*m.Cols/2)
-	m.Path = append(m.Path, m.StartTile)
-
-	var tile Tile
-	var currentDirection Direction
-
-	if neighbors, err := m.GetConnectingTiles(Unknown, m.StartTile); err != nil {
-		return 0, err
-	} else if neighbors == nil || len(neighbors) != 2 {
-		return 0, fmt.Errorf("the starting tile must have two (2) connected tiles, not %v", len(neighbors))
-	} else {
-		for d, t := range neighbors {
-			currentDirection = d
-			tile = t
-			break
-		}
+func (m *Map) FindPath() error {
+	if m == nil || m.Path == nil || len(m.Path) == 0 {
+		return nil
 	}
+
+	if len(m.Path) > 1 {
+		return fmt.Errorf("a map must have exactly one starting tile, not %v", len(m.Path))
+	}
+
+	currentDirection, currentTile := Unknown, &m.Path[0]
 
 	for {
-		if neighbors, err := m.GetConnectingTiles(currentDirection, tile); err != nil {
-			return 0, fmt.Errorf("an error occurred when attempting to find connecting tiles at %v, (%w)", tile, err)
-		} else if neighbors == nil || len(neighbors) != 1 {
-			return 0, fmt.Errorf("tile (%v) should have exactly one (1) connecting tile, but has %v", tile, len(neighbors))
+		neighbors := m.GetConnectedTiles(currentDirection, *currentTile)
+		if neighbors == nil || len(neighbors) < 1 || len(neighbors) > 2 {
+			return fmt.Errorf("a tile should have 1 or 2 connecting tiles, but %v has %v", currentTile, len(neighbors))
 		} else {
-			for d, t := range neighbors {
-				currentDirection = d
-				tile = t
+			for nextDirection, nextTile := range neighbors {
+				currentDirection = nextDirection
+				currentTile = &nextTile
+				currentTile.PathPosition = OnPath
+				m.Grid[currentTile.Row()][currentTile.Col()].PathPosition = OnPath
 				break
 			}
-			m.Path = append(m.Path, tile)
-			if tile == m.StartTile {
-				return len(m.Path) / 2, nil
+			m.Path = append(m.Path, *currentTile)
+			if currentTile.PipeType == StarterPipe {
+				return nil
 			}
 		}
 	}
+}
+
+func (m *Map) FindTilesInsidePath() (int, error) {
+	if m == nil {
+		return 0, fmt.Errorf("called on an nil pointer")
+	}
+	if m.Grid == nil {
+		return 0, fmt.Errorf("map has no tile grid")
+	}
+	if len(m.Grid) == 0 {
+		return 0, fmt.Errorf("tile grid is empty")
+	}
+
+	m.Insiders = make([]Tile, 0, len(m.Grid)/3)
+
+	pathPosition := OutsidePath
+
+	for iRow, row := range m.Grid {
+		for iCol, tile := range row {
+			switch tile.PathPosition {
+			case OnPath:
+				switch pathPosition {
+				case OutsidePath:
+					pathPosition = InsidePath
+				case InsidePath:
+					pathPosition = OutsidePath
+				}
+			default:
+				fmt.Printf("updating %d,%d to %v\n", iRow, iCol, pathPosition)
+				tile.PathPosition = pathPosition
+				m.Grid[tile.Row()][tile.Col()].PathPosition = pathPosition
+				if pathPosition == InsidePath {
+					m.Insiders = append(m.Insiders, tile)
+				}
+			}
+			utils.PrintlnJSON(tile, false)
+		}
+	}
+	return len(m.Insiders), nil
 }
