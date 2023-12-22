@@ -11,6 +11,8 @@ const (
 	NorthWest   PipeType = "J"
 	StarterPipe PipeType = "S"
 	NoPipe      PipeType = "."
+	InsidePath  PipeType = "I"
+	OutsidePath PipeType = "O"
 )
 
 type (

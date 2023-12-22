@@ -1,28 +1,16 @@
 package pipes
 
-type PathPosition string
-
-const (
-	OnPath      PathPosition = "P"
-	InsidePath  PathPosition = "I"
-	OutsidePath PathPosition = "O"
-)
-
 type (
 	Coordinates [2]int
 
 	Tile struct {
-		Coords       Coordinates
-		PipeType     PipeType
-		PathPosition PathPosition
+		Coords   Coordinates
+		PipeType PipeType
+		OnPath   bool
 	}
-
-	TileRow  []Tile
-	TilePath []Tile
-	TileGrid []TileRow
 )
 
-func NewTile(row, col int, pipeType PipeType) (t *Tile) {
+func NewTile(row, col int, pipeType PipeType) *Tile {
 	return &Tile{
 		Coords:   Coordinates{row, col},
 		PipeType: pipeType,
@@ -41,6 +29,16 @@ func (t Tile) ConnectsTo(d Direction) bool {
 	return t.PipeType.ConnectsTo(d)
 }
 
-func (g *TileGrid) Row(r int) TileRow {
-	return (*g)[r]
+func (t *Tile) SetPipeType(p PipeType) (*Tile, PipeType) {
+	if t.OnPath {
+		switch p {
+		case OutsidePath:
+			p = InsidePath
+		case InsidePath:
+			p = OutsidePath
+		}
+	} else {
+		t.PipeType = p
+	}
+	return t, p
 }

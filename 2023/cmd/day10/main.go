@@ -11,7 +11,7 @@ func main() {
 	var pipeMap *pipes.Map
 	var err error
 
-	if pipeMap, err = pipes.NewMap(input); err != nil {
+	if pipeMap, err = pipes.NewMap(&input); err != nil {
 		panic(err)
 	}
 
@@ -44,15 +44,16 @@ func partOne(m *pipes.Map) (length int, err error) {
 
 	// utils.PrintlnJSON(m, true)
 
-	// utils.WriteJSONToFile("./report.json", report, true)
-	return m.DistanceToFarthestTile(), nil
+	utils.WriteJSONToFile("./map.json", *m, true)
+
+	return m.PathLength(), nil
 }
 
 func partTwo(m *pipes.Map) (length int, err error) {
 	// fmt.Println("partTwo: Beginning")
 	// defer fmt.Println("partTwo: Finished")
 
-	length, err = m.FindTilesInsidePath()
-	utils.PrintlnJSON(m, false)
+	length = len(*m.Insiders)
+	utils.PrintlnJSON(*m.Insiders, false)
 	return
 }
