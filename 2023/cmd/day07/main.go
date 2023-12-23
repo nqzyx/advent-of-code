@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"nqzyx.xyz/advent-of-code/2023/day07/camelcards"
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-cde2023/day07/camelcards"
+	"github.com/nqzyx/advent-of-cde2023/utils"
 )
 
 func getInput() []string {

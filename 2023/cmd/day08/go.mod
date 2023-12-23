@@ -1,15 +1,15 @@
-module nqzyx.xyz/advent-of-code/2023/day08
+module github.com/nqzyx/advent-of-code/2023/day08
 
 go 1.21.3
 
 replace (
-	nqzyx.xyz/advent-of-code/2023/day08/nodemap => ./nodemap
-	nqzyx.xyz/advent-of-code/2023/utils => ../../internal/utils
+	github.com/nqzyx/advent-of-cde2023/day08/nodemap => ./nodemap
+	github.com/nqzyx/advent-of-code/utils => ../../internal/utils
 )
 
 require (
-	nqzyx.xyz/advent-of-code/2023/day08/nodemap v0.0.0-00010101000000-000000000000
-	nqzyx.xyz/advent-of-code/2023/utils v0.0.0-00010101000000-000000000000
+	github.com/nqzyx/advent-of-cde2023/day08/nodemap v0.0.0-00010101000000-000000000000
+	github.com/nqzyx/advent-of-code/utils v0.0.0-00010101000000-000000000000
 )
 
 require (

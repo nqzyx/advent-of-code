@@ -7,8 +7,8 @@ import (
 	"path"
 	"strings"
 
-	"nqzyx.xyz/advent-of-code/2023/day05/almanac"
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-cde2023/day05/almanac"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 func getArgs() (dataPath string) {

@@ -1,15 +1,15 @@
 package oasis
 
 import (
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-cde2023/utils"
 )
 
 type ValueHistory struct {
-	Readings   []int
-	Analyses   Analyses
+	Readings    []int
+	Analyses    Analyses
 	Predictions struct {
 		Previous int
-		Next int
+		Next     int
 	}
 }
 
@@ -35,19 +35,19 @@ func (vh *ValueHistory) Analyze() {
 	vh.Analyses = make(Analyses, 0, len(vh.Readings))
 	currentAnalysis := NewAnalysisInitialized(vh.Readings)
 	vh.Analyses = append(vh.Analyses, currentAnalysis)
-	
+
 	for {
 		if nextAnalysis := currentAnalysis.NextAnalysis(); nextAnalysis == nil {
 			break
 		} else {
-			vh.Analyses = append(vh.Analyses, nextAnalysis)		
+			vh.Analyses = append(vh.Analyses, nextAnalysis)
 			currentAnalysis = NewAnalysisInitialized(nextAnalysis.Intervals)
-		} 
+		}
 	}
 
 	vh.Analyses.Analyze()
 
 	vh.setPredictions()
-	
+
 	// utils.PrintlnJSON(vh, false)
 }

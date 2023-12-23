@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-cde2023/utils"
 )
 
 var digitsRegexp = regexp.MustCompile("[[:digit:]]+")

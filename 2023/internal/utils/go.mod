@@ -1,4 +1,4 @@
-module nqzyx.xyz/advent-of-code/2023/utils
+module github.com/nqzyx/advent-of-code/utils
 
 go 1.21.3
 

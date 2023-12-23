@@ -1,14 +1,14 @@
-module nqzyx.xyz/advent-of-code/2023/day10
+module github.com/nqzyx/advent-of-code/2023/day10
 
-replace nqzyx.xyz/advent-of-code/2023/utils => ../../internal/utils
+replace github.com/nqzyx/advent-of-code/utils => ../../internal/utils
 
-replace nqzyx.xyz/advent-of-code/2023/day10/pipes => ./pipes
+replace github.com/nqzyx/advent-of-code/2023/day10/pipes => ./pipes
 
 go 1.21.5
 
 require (
-	nqzyx.xyz/advent-of-code/2023/day10/pipes v0.0.0-00010101000000-000000000000
-	nqzyx.xyz/advent-of-code/2023/utils v0.0.0-00010101000000-000000000000
+	github.com/nqzyx/advent-of-cde2023/day10/pipes v0.0.0-00010101000000-000000000000
+	github.com/nqzyx/advent-of-code/utils v0.0.0-00010101000000-000000000000
 )
 
 require (

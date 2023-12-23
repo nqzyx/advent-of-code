@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"nqzyx.xyz/advent-of-code/2023/day10/pipes"
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-cde2023/day10/pipes"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 func main() {

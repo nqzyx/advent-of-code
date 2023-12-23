@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
-	"nqzyx.xyz/advent-of-code/2023/utils"
-	"nqzyx.xyz/advent-of-code/2023/xref"
+	"github.com/nqzyx/advent-of-code/utils"
+	"github.com/nqzyx/advent-of-code/xref"
 )
 
 type Almanac struct {
