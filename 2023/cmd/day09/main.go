@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nqzyx/advent-of-cde2023/day09/oasis"
-	"github.com/nqzyx/advent-of-cde2023/utils"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 func main() {

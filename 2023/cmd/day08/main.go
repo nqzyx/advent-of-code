@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/nqzyx/advent-of-cde2023/day08/nodemap"
-	"github.com/nqzyx/advent-of-cde2023/utils"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 func partOne(input []string) (moves int, err error) {
