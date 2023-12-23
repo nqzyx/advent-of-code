@@ -32,10 +32,10 @@ func (t Tile) ConnectsTo(d Direction) bool {
 func (t *Tile) SetPipeType(p PipeType) (*Tile, PipeType) {
 	if t.OnPath {
 		switch p {
-		case OutsidePath:
+		case NoPipe:
 			p = InsidePath
 		case InsidePath:
-			p = OutsidePath
+			p = NoPipe
 		}
 	} else {
 		t.PipeType = p

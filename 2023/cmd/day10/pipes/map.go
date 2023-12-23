@@ -2,7 +2,10 @@ package pipes
 
 import (
 	"fmt"
+	"math"
 	"strings"
+
+	"nqzyx.xyz/advent-of-code/2023/utils"
 )
 
 type Map struct {
@@ -58,8 +61,64 @@ func NewMap(inputRows *[]string) (*Map, error) {
 	return g, nil
 }
 
-func (m *Map) PathLength() int {
-	return len(*m.Path) / 2
+func (m Map) Col(col int) *TileList {
+	tileList := new(TileList)
+	*tileList = make(TileList, 0, len(*m.Tiles[0]))
+	for _, row := range m.Tiles {
+		if col > len(*row) {
+			panic(fmt.Errorf("%v exceeds the number of columns (%v)", col, len(*row)))
+		}
+		*tileList = append(*tileList, (*row)[col])
+	}
+	return tileList
+}
+
+func (m Map) Diagonal(tile Tile, rowDirection int, colDirection int) (*TileList, error) {
+	if rowDirection != 1 && rowDirection != -1 && colDirection != 1 && colDirection != -1 {
+		return nil, fmt.Errorf("rowDirection and colDirection must be 1 or -1")
+	}
+	tileList := new(TileList)
+	tRow := tile.Row()
+	tCol := tile.Col()
+	startOffset := int(math.Abs(math.Min(float64(tRow), float64(tCol))))
+	startRow := tRow - (rowDirection * startOffset)
+	startCol := tCol - (colDirection * startOffset)
+	var endRow int
+	if rowDirection == -1 {
+		endRow = 0
+	} else {
+		endRow = m.RowCount()
+	}
+	var endCol int
+	if colDirection == -1 {
+		endCol = 0
+	} else {
+		endCol = m.ColCount()
+	}
+	for row, col := startRow, startCol; row <= endRow && col <= endCol; row, col = row+1, col+1 {
+		*tileList = append(*tileList, *m.TileAt(row, col))
+	}
+	return tileList, nil
+}
+
+func (m Map) TopRightDiagonal(tile Tile) (*TileList, error) {
+	if tl, err := m.Diagonal(tile, +1, -1); err != nil {
+		return nil, err
+	} else {
+		return tl, nil
+	}
+}
+
+func (m Map) TopLeftDiagonal(tile Tile) (*TileList, error) {
+	if tl, err := m.Diagonal(tile, +1, +1); err != nil {
+		return nil, err
+	} else {
+		return tl, nil
+	}
+}
+
+func (m Map) ColCount() int {
+	return len(*(m.Tiles)[0])
 }
 
 func (m *Map) FindInsiders() (*TileList, error) {
@@ -72,21 +131,23 @@ func (m *Map) FindInsiders() (*TileList, error) {
 
 	insiders := NewTileList(len(m.Tiles) / 3)
 
-	for _, row := range m.Tiles {
-		lPipeType := OutsidePath
-		rPipeType := OutsidePath
-
-		for l, r := 0, len(*row)-1; l <= r; l, r = l+1, r-1 {
-			lTile, rTile := &(*row)[l], &(*row)[r]
-
-			lTile, lPipeType = lTile.SetPipeType(lPipeType)
-			if lTile.PipeType == InsidePath {
-				*insiders = append(*insiders, *lTile)
+	for r := 1; r < len(m.Tiles)-2; r++ {
+		row := m.Tiles[r]
+		for c := 1; c < len(*row)-2; c++ {
+			tile := m.TileAt(r, c)
+			if tile.OnPath {
+				continue
 			}
-
-			rTile, rPipeType = rTile.SetPipeType(rPipeType)
-			if rTile.PipeType == InsidePath {
-				*insiders = append(*insiders, *rTile)
+			col := m.Col(c)
+			fmt.Printf("r: %v, c: %v, row: %v\n", r, c, TileList((*row)[0:c]))
+			leftRowTiles := TileList(utils.Reverse(TileList((*row)[0:c])))
+			rightRowTiles := TileList((*row)[c+1:])
+			topColTiles := TileList(utils.Reverse(TileList((*col)[0:r])))
+			btmColTiles := TileList((*col)[r+1:])
+			if leftRowTiles.HasPathTiles() && rightRowTiles.HasPathTiles() && topColTiles.HasPathTiles() && btmColTiles.HasPathTiles() &&
+				(leftRowTiles.IsInsidePath(West) || rightRowTiles.IsInsidePath(East) || topColTiles.IsInsidePath(North) || btmColTiles.IsInsidePath(South)) {
+				tile.SetPipeType(InsidePath)
+				*insiders = append(*insiders, *tile)
 			}
 		}
 	}
@@ -155,7 +216,10 @@ func (m *Map) GetConnectedTiles(from Direction, t *Tile) *map[Direction]*Tile {
 	}
 }
 
-func (m *Map) Row(row int) *TileList {
+func (m Map) Row(row int) *TileList {
+	tileList := new(TileList)
+	*tileList = make(TileList, 0, len(*m.Tiles[row]))
+	copy(*tileList, *m.Tiles[row])
 	return m.Tiles[row]
 }
 
@@ -163,14 +227,14 @@ func (m Map) RowCount() int {
 	return len(m.Tiles)
 }
 
-func (m Map) ColCount() int {
-	return len(*(m.Tiles)[0])
-}
-
-func (m *Map) TileAt(row, col int) *Tile {
-	return &(*m.Tiles[row])[col]
+func (m *Map) PathLength() int {
+	return len(*m.Path) / 2
 }
 
 func (m *Map) SetTile(row, col int, t *Tile) {
 	(*m.Tiles[row])[col] = *t
+}
+
+func (m *Map) TileAt(row, col int) *Tile {
+	return &(*m.Tiles[row])[col]
 }

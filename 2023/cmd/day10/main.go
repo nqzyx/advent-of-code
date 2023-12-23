@@ -17,6 +17,8 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Println(pipeMap)
+
 	answers := map[string]any{
 		"part1": func() map[string]any {
 			result, err := partOne(pipeMap)
@@ -56,7 +58,9 @@ func partTwo(m *pipes.Map) (length int, err error) {
 	// defer fmt.Println("partTwo: Finished")
 
 	length = len(*m.Insiders)
+	fmt.Println("Path:", *m.Path)
 	fmt.Println("Insiders:", *m.Insiders)
+
 	// utils.PrintlnJSON(*m.Insiders, false)
 	return
 }
