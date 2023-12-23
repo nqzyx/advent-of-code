@@ -7,7 +7,7 @@ replace github.com/nqzyx/advent-of-code/2023/day10/pipes => ./pipes
 go 1.21.5
 
 require (
-	github.com/nqzyx/advent-of-cde2023/day10/pipes v0.0.0-00010101000000-000000000000
+	github.com/nqzyx/advent-of-code/day10/pipes v0.0.0-00010101000000-000000000000
 	github.com/nqzyx/advent-of-code/utils v0.0.0-00010101000000-000000000000
 )
 

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/nqzyx/advent-of-cde2023/day09/oasis"
+	"github.com/nqzyx/advent-of-code/day09/oasis"
 	"github.com/nqzyx/advent-of-code/utils"
 )
 

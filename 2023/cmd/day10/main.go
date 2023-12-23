@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/nqzyx/advent-of-cde2023/day10/pipes"
+	"github.com/nqzyx/advent-of-code/day10/pipes"
 	"github.com/nqzyx/advent-of-code/utils"
 )
 
