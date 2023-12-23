@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nqzyx/advent-of-cde2023/utils"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 func main() {

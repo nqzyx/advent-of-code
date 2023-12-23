@@ -1,7 +1,7 @@
 package oasis
 
 import (
-	"github.com/nqzyx/advent-of-cde2023/utils"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 type ValueHistory struct {
