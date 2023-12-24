@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/nqzyx/advent-of-code/day08/nodemap"
+	"github.com/nqzyx/advent-of-code/2023/day08/nodemap"
 )
 
 func TestNewNode(t *testing.T) {

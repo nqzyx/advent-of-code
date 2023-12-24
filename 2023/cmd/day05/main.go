@@ -7,7 +7,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/nqzyx/advent-of-code/day05/almanac"
+	"github.com/nqzyx/advent-of-code/2023/day05/almanac"
 	"github.com/nqzyx/advent-of-code/utils"
 )
 

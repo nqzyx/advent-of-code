@@ -85,7 +85,7 @@ func getInput() (seeds []int64, almanac [][][]int64) {
 }
 
 func getSeedGivenLocation(almanac [][][]int64, step int64) int64 {
-	for _, entry := range utils.ReverseArray(almanac) {
+	for _, entry := range utils.Reverse(almanac) {
 		for _, r := range entry {
 			destination, source, length := r[0], r[1], r[2]
 			if destination <= step && destination+length > step {

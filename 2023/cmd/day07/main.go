@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/nqzyx/advent-of-code/day07/camelcards"
+	"github.com/nqzyx/advent-of-code/2023/day07/camelcards"
 	"github.com/nqzyx/advent-of-code/utils"
 )
 

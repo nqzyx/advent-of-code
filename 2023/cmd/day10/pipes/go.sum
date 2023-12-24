@@ -1,1 +1,2 @@
-github.com/linkdotnet/golang-stringbuilder v0.11.0 h1:WAh5n6qAeCmLIYDK1ffnqNC7zduHuP8Dj36W0C3gAWc=
+golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611 h1:qCEDpW1G+vcj3Y7Fy52pEM1AWm3abj8WimGYejI3SC4=
+golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=

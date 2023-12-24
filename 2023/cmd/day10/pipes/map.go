@@ -139,7 +139,7 @@ func (m *Map) FindInsiders() (*TileList, error) {
 				continue
 			}
 			col := m.Col(c)
-			fmt.Printf("r: %v, c: %v, row: %v\n", r, c, TileList((*row)[0:c]))
+			// fmt.Printf("r: %v, c: %v, row: %v\n", r, c, TileList((*row)[0:c]))
 			leftRowTiles := TileList(utils.Reverse(TileList((*row)[0:c])))
 			rightRowTiles := TileList((*row)[c+1:])
 			topColTiles := TileList(utils.Reverse(TileList((*col)[0:r])))
