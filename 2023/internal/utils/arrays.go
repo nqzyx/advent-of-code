@@ -2,25 +2,10 @@ package utils
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 
 	"golang.org/x/exp/constraints"
 )
-
-var integerRegexp = regexp.MustCompile("[+-]?[[:digit:]]+")
-
-func Insert[T any](a []T, c T, i int) []T {
-	return append(a[:i], append([]T{c}, a[i:]...)...)
-}
-
-func Reverse[T any](a []T) []T {
-	newA := make([]T, len(a))
-	for i, j := 0, len(a)-1; i < len(a); i, j = i+1, j-1 {
-		newA[i] = a[j]
-	}
-	return newA
-}
 
 type Numeric interface {
 	constraints.Float | constraints.Integer
@@ -43,21 +28,6 @@ func NewNumericArrayFromStringWithSeparator[T Numeric](str string, sep string) (
 			}
 			result[i] = T(x)
 		}
-	}
-	return
-}
-
-func NewIntArrayFromString[T constraints.Integer](s string) (result []T) {
-	s = strings.TrimSpace(s)
-	sArr := integerRegexp.FindAllString(s, -1)
-	result = make([]T, len(sArr))
-	for i, v := range sArr {
-		var x T
-		err := Parse(v, &x)
-		if err != nil {
-			fmt.Println(err)
-		}
-		result[i] = T(x)
 	}
 	return
 }

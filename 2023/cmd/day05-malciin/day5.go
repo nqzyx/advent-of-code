@@ -6,6 +6,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/nqzyx/advent-of-code/utils"
@@ -73,7 +74,7 @@ func getInput() (seeds []int64, almanac [][][]int64) {
 	// dumpArray("cc", cc)
 	var ea [][]int64 = make([][]int64, len(cc))
 	for i, c := range cc {
-		ea[i] = utils.NewIntArrayFromString[int64](strings.Split(c, ":")[1])
+		ea[i] = utils.NewNumericArrayFromString[int64](strings.Split(c, ":")[1])
 	}
 	// dumpArray("ea", ea)
 	seeds = ea[0]
@@ -85,7 +86,10 @@ func getInput() (seeds []int64, almanac [][][]int64) {
 }
 
 func getSeedGivenLocation(almanac [][][]int64, step int64) int64 {
-	for _, entry := range utils.Reverse(almanac) {
+	reverseAlmanac := make([][][]int64, 0, len(almanac))
+	copy(reverseAlmanac,almanac)
+	slices.Reverse(reverseAlmanac)
+	for _, entry := range reverseAlmanac {
 		for _, r := range entry {
 			destination, source, length := r[0], r[1], r[2]
 			if destination <= step && destination+length > step {

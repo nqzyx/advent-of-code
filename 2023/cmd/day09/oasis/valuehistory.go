@@ -14,7 +14,7 @@ type ValueHistory struct {
 }
 
 func NewValueHistory(valueList string) (result *ValueHistory) {
-	readings := utils.NewIntArrayFromString[int](valueList)
+	readings := utils.NewNumericArrayFromString[int](valueList)
 	result = &ValueHistory{
 		Readings: readings,
 	}

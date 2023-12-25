@@ -48,13 +48,13 @@ func NewAlmanac(stringData []string, part1 bool) *Almanac {
 
 func (f *Almanac) AddSeeds(seedData string) *Almanac {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
-	f.Seeds = utils.NewIntArrayFromString[uint64](seeds)
+	f.Seeds = utils.NewNumericArrayFromString[uint64](seeds)
 	return f
 }
 
 func (f *Almanac) AddSeedRanges(seedData string) *Almanac {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
-	seedArray := utils.NewIntArrayFromString[uint64](seeds)
+	seedArray := utils.NewNumericArrayFromString[uint64](seeds)
 	for i := 0; i < len(seedArray); i += 2 {
 		rng, _ := xref.NewRange(seedArray[i], seedArray[i+1])
 		f.SeedRanges = append(f.SeedRanges, *rng)
@@ -75,7 +75,7 @@ func (f *Almanac) AddXrefMap(xrefMapData string) *Almanac {
 	xref := xref.NewXref(name, source, destination, len(xrefData))
 	for _, rangeData := range xrefData {
 		destinationValue, sourceValue, length := func(s string) (uint64, uint64, uint64) {
-			uintArray := utils.NewIntArrayFromString[uint64](s)
+			uintArray := utils.NewNumericArrayFromString[uint64](s)
 			return uintArray[0], uintArray[1], uintArray[2]
 		}(rangeData)
 		if length > 0 {
