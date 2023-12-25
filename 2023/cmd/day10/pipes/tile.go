@@ -1,44 +1,42 @@
 package pipes
 
-type (
-	Coordinates [2]int
+import (
+	"github.com/paulmach/orb"
+)
 
-	Tile struct {
-		Coords   Coordinates
-		PipeType PipeType
-		OnPath   bool
+type (
+	Location  orb.Point
+	Neighbors map[Direction]*Tile
+
+	Tile/* MAYBE */ struct {
+		Location  Location
+		PipeType  PipeType
+		OnPath    bool
+		Neighbors Neighbors
 	}
 )
 
-func NewTile(row, col int, pipeType PipeType) *Tile {
+func NewTile(row, col int, pipeType PipeType, onPath bool) *Tile {
 	return &Tile{
-		Coords:   Coordinates{row, col},
+		Location: Location{float64(row), float64(col)},
 		PipeType: pipeType,
+		OnPath:   onPath,
 	}
 }
 
 func (t Tile) Col() int {
-	return t.Coords[1]
+	return int(t.Location[1])
 }
 
 func (t Tile) Row() int {
-	return t.Coords[0]
+	return int(t.Location[0])
 }
 
-func (t Tile) ConnectsTo(d Direction) bool {
-	return t.PipeType.ConnectsTo(d)
-}
-
-func (t *Tile) SetPipeType(p PipeType) (*Tile, PipeType) {
-	if t.OnPath {
-		switch p {
-		case NoPipe:
-			p = InsidePath
-		case InsidePath:
-			p = NoPipe
+func (t Tile) CanConnectTo(d Direction) bool {
+	if t.Neighbors != nil {
+		if _, ok := t.Neighbors[d]; ok {
+			return true
 		}
-	} else {
-		t.PipeType = p
 	}
-	return t, p
+	return t.PipeType.CanConnectTo(d)
 }

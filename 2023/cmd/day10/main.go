@@ -8,12 +8,12 @@ import (
 )
 
 func main() {
-	input := utils.GetInput()
+	inputData := utils.GetInput()
 
 	var m *pipes.Map
 	var err error
 
-	if m, err = pipes.NewMap(&input); err != nil {
+	if m, err = pipes.NewMap(&inputData); err != nil {
 		panic(err)
 	}
 
@@ -49,7 +49,8 @@ func partOne(m *pipes.Map) (int, error) {
 	fmt.Printf(beginning, "partOne")
 	defer fmt.Printf(finished, "partOne")
 
-	fmt. Println(m)
+	fmt.Printf("MAP\n---\n%v\n\n", m)
+	fmt.Printf("Insiders\n--------\n%v\n\n", *m.Insiders)
 
 	return m.PathLength(), nil
 }

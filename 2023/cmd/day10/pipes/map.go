@@ -2,239 +2,221 @@ package pipes
 
 import (
 	"fmt"
-	"math"
+	"slices"
 	"strings"
 
 	"github.com/nqzyx/advent-of-code/utils"
+	"github.com/paulmach/orb"
+	"golang.org/x/exp/maps"
 )
 
-type Map struct {
-	colCount  int
-	rowCount  int
-	Insiders  *TileList
-	Path      *TileList
-	StartTile *Tile
-	Tiles     []*TileList
-}
+type (
+	Insiders orb.MultiPoint
+
+	Map struct {
+		colCount  int
+		rowCount  int
+		Insiders  *Insiders
+		Path      *Path
+		StartTile *Location
+		Tiles     [][]Tile
+	}
+)
 
 func NewMap(inputRows *[]string) (*Map, error) {
 	var err error
-	// func NewTileGrid(rowCapacity, colCapacity int) *TileGrid {
-	g := new(Map)
-	g.rowCount = len(*inputRows)
-	g.colCount = len((*inputRows)[0])
-	g.Tiles = make([]*TileList, 0, g.rowCount)
+
+	slices.DeleteFunc(*inputRows, func(inputRow string) bool {
+		return len(strings.TrimSpace(inputRow)) == 0
+	})
+
+	m := *new(Map)
+	m.rowCount = len(*inputRows)
+	m.colCount = len((*inputRows)[0])
+	m.Tiles = make([][]Tile, 0, m.rowCount)
 
 	for r, inputRow := range *inputRows {
-		if inputRow = strings.TrimSpace(inputRow); len(inputRow) == 0 {
-			continue
+		if m.ColCount() != len(inputRow) {
+			return nil, fmt.Errorf("all rows must have the same number of columns. Expected %v, found %v", m.ColCount(), len(inputRow))
 		}
 
-		if g.colCount != len(inputRow) {
-			return nil, fmt.Errorf("all rows must have the same number of columns. Expected %v, found %v", g.colCount, len(inputRow))
-		}
-
-		theRow := NewTileList(len(inputRow))
 		for c, inputCol := range inputRow {
 			pipeType := PipeType(inputCol)
-			theTile := NewTile(r, c, pipeType)
-			if pipeType == StarterPipe {
-				theTile.OnPath = true
-				g.StartTile = theTile
+			tileLocation := Location{float64(r), float64(c)}
+			theTile := *NewTile(r, c, pipeType, pipeType == START_PIPE)
+			if pipeType == START_PIPE {
+				m.StartTile = &tileLocation
 			}
-			*theRow = append(*theRow, *theTile)
+			m.AddTile(theTile)
 		}
-		g.Tiles = append(g.Tiles, theRow)
 	}
 
-	if g.StartTile == nil {
-		return nil, fmt.Errorf("a map must have a start tile")
+	if m.StartTile == nil {
+		panic(fmt.Errorf("the map must have a starting tile"))
 	}
 
-	if g.Path, err = g.FindPath(*g.StartTile); err != nil {
+	if m.Path, err = m.FindPath(*m.StartTile); err != nil {
 		return nil, err
 	}
 
-	if g.Insiders, err = g.FindInsiders(); err != nil {
-		return nil, err
-	}
-	return g, nil
+	// if m.Insiders, err = m.FindInsiders(); err != nil {
+	// 	return nil, err
+	// }
+	return &m, nil
 }
 
-func (m Map) Col(col int) *TileList {
-	tileList := new(TileList)
-	*tileList = make(TileList, 0, len(*m.Tiles[0]))
-	for _, row := range m.Tiles {
-		if col > len(*row) {
-			panic(fmt.Errorf("%v exceeds the number of columns (%v)", col, len(*row)))
-		}
-		*tileList = append(*tileList, (*row)[col])
+func (m *Map) AddTile(t Tile) {
+	if m.Tiles == nil {
+		m.Tiles = make([][]Tile, 0, m.rowCount)
 	}
-	return tileList
+	row, col := GetRowCol(t.Location)
+	if m.Tiles[row] == nil {
+		m.Tiles[row] = make([]Tile, 0, m.colCount)
+	}
+	m.Tiles[row][col] = t
 }
 
-func (m Map) Diagonal(tile Tile, rowDirection int, colDirection int) (*TileList, error) {
-	if rowDirection != 1 && rowDirection != -1 && colDirection != 1 && colDirection != -1 {
-		return nil, fmt.Errorf("rowDirection and colDirection must be 1 or -1")
-	}
-	tileList := new(TileList)
-	tRow := tile.Row()
-	tCol := tile.Col()
-	startOffset := int(math.Abs(math.Min(float64(tRow), float64(tCol))))
-	startRow := tRow - (rowDirection * startOffset)
-	startCol := tCol - (colDirection * startOffset)
-	var endRow int
-	if rowDirection == -1 {
-		endRow = 0
-	} else {
-		endRow = m.RowCount()
-	}
-	var endCol int
-	if colDirection == -1 {
-		endCol = 0
-	} else {
-		endCol = m.ColCount()
-	}
-	for row, col := startRow, startCol; row <= endRow && col <= endCol; row, col = row+1, col+1 {
-		*tileList = append(*tileList, *m.TileAt(row, col))
-	}
-	return tileList, nil
+func (m *Map) TileAtLocation(l Location) *Tile {
+	row, col := GetRowCol(l)
+	return &m.Tiles[row][col]
 }
 
-func (m Map) TopRightDiagonal(tile Tile) (*TileList, error) {
-	if tl, err := m.Diagonal(tile, +1, -1); err != nil {
-		return nil, err
-	} else {
-		return tl, nil
-	}
+func (m *Map) TileAt(r, c int) *Tile {
+	return &m.Tiles[r][c]
 }
 
-func (m Map) TopLeftDiagonal(tile Tile) (*TileList, error) {
-	if tl, err := m.Diagonal(tile, +1, +1); err != nil {
-		return nil, err
-	} else {
-		return tl, nil
-	}
-}
-
-func (m Map) ColCount() int {
-	return len(*(m.Tiles)[0])
+func (m *Map) ColCount() int {
+	return m.colCount
 }
 
 func (m *Map) FindInsiders() (*TileList, error) {
-	if m == nil {
-		return nil, fmt.Errorf("tile grid does not exist")
-	}
-	if len(m.Tiles) == 0 {
-		return nil, fmt.Errorf("tile grid is empty")
-	}
+	utils.FunctionNotImplemented()
+	// if m == nil {
+	// 	return nil, fmt.Errorf("tile grid does not exist")
+	// }
+	// if len(m.Tiles) == 0 {
+	// 	return nil, fmt.Errorf("tile grid is empty")
+	// }
 
-	insiders := NewTileList(len(m.Tiles) / 3)
+	// insiders := NewTileList(len(m.Tiles) / 3)
 
-	for r := 1; r < len(m.Tiles)-2; r++ {
-		row := m.Tiles[r]
-		for c := 1; c < len(*row)-2; c++ {
-			tile := m.TileAt(r, c)
-			if tile.OnPath {
-				continue
-			}
-			col := m.Col(c)
-			// fmt.Printf("r: %v, c: %v, row: %v\n", r, c, TileList((*row)[0:c]))
-			leftRowTiles := TileList(utils.Reverse(TileList((*row)[0:c])))
-			rightRowTiles := TileList((*row)[c+1:])
-			topColTiles := TileList(utils.Reverse(TileList((*col)[0:r])))
-			btmColTiles := TileList((*col)[r+1:])
-			if leftRowTiles.HasPathTiles() && rightRowTiles.HasPathTiles() && topColTiles.HasPathTiles() && btmColTiles.HasPathTiles() &&
-				(leftRowTiles.IsInsidePath(West) || rightRowTiles.IsInsidePath(East) || topColTiles.IsInsidePath(North) || btmColTiles.IsInsidePath(South)) {
-				tile.SetPipeType(InsidePath)
-				*insiders = append(*insiders, *tile)
-			}
-		}
-	}
-	return insiders, nil
+	// for r := 1; r < len(m.Tiles)-2; r++ {
+	// 	row := m.Tiles[r]
+	// 	for c := 1; c < len(*row)-2; c++ {
+	// 		tile := m.TileAt(r, c)
+	// 		if tile.OnPath {
+	// 			continue
+	// 		}
+	// 		// col := m.Col(c)
+	// 		// fmt.Printf("r: %v, c: %v, row: %v\n", r, c, TileList((*row)[0:c]))
+	// 		// eastWestTiles := row
+	// 		// eastTiles := (*eastWestTiles)[0:c]
+	// 		// westTiles := (*eastWestTiles)[c+1:]
+	// 		// northSouthTiles := m.Col(c)
+	// 		// northTiles := utils.Reverse((*northSouthTiles)[0:r])
+	// 		// btmColTiles := TileList((*col)[r+1:])
+	// 		// if eastTiles.EnclosesTilesOn(WEST) || westTiles.EnclosesTilesOn(DIR_EAST) {
+	// 		// 	tile.PipeType = InsidePath
+	// 		// 	*insiders = append(*insiders, *tile)
+	// 		// }
+	// 	}
+	// }
+	// return insiders, nil
+	return nil, nil
 }
 
-func (m *Map) FindPath(start Tile) (*TileList, error) {
-	if start.PipeType != StarterPipe {
-		return nil, fmt.Errorf("start tile must have PipeType == StarterPipe")
+func (m *Map) FindPath(l Location) (*Path, error) {
+	var currentTile, nextTile *Tile
+	var currentDirection, nextDirection Direction = DIR_UNKNOWN, DIR_UNKNOWN
+	// Ensure the start tile has been set and is valid
+	currentTile = m.TileAtLocation(l)
+	if currentTile == nil {
+		return nil, fmt.Errorf("map has no start tile")
 	}
-
-	path := NewTileList(m.RowCount() * m.ColCount() / 3)
-	*path = append(*path, start)
-
-	currentDirection, currentTile := Unknown, &start
-
+	if currentTile.PipeType != START_PIPE {
+		return nil, fmt.Errorf("invalid start tile (pipe type is \"%v\")", currentTile.PipeType)
+	}
+	// hang on to the start tile for later comparisons
+	startTile := currentTile
+	// Init path
+	path := new(Path)
+	path.Steps = make(orb.Ring, 0, len(m.Tiles)/3)
+	path.Sides = make(orb.MultiLineString, 0)
+	// iterate through the entire path
 	for {
-		connectedTiles := m.GetConnectedTiles(currentDirection, currentTile)
-		if connectedTiles == nil {
-			return nil, fmt.Errorf("%v has no connected tiles", currentTile)
-		} else if connectedTileCount := len(*connectedTiles); connectedTileCount < 1 || connectedTileCount > 2 {
-			return nil, fmt.Errorf("a tile should have 1 or 2 connecting tiles, but %v has %v", currentTile, connectedTileCount)
-		} else {
-			for nextDirection, nextTile := range *connectedTiles {
-				currentDirection = nextDirection
-				nextTile.OnPath = true
-				currentTile = nextTile
-				break
-			}
-			*path = append(*path, *currentTile)
-			if currentTile.PipeType == StarterPipe {
-				return path, nil
+		// Add current tile to path
+		path.AddTile(currentTile)
+		connectedNeighbors := *m.GetConnectedNeighbors(currentTile, currentDirection)
+		if len(connectedNeighbors) != 2 {
+			return nil, fmt.Errorf("each tile on the path should have 2 connected neighbors, but %v has %v", currentTile, len(connectedNeighbors))
+		}
+		// Add Neighbors to current tile
+		for d, t := range connectedNeighbors {
+			currentTile.Neighbors[d] = t
+			if d != currentDirection {
+				nextTile = t
+				nextDirection = d
+				nextTile.OnPath = currentTile.OnPath
 			}
 		}
+		// set pipe type for the start tile
+		if orb.Point(currentTile.Location).Equal(orb.Point(startTile.Location)) {
+			// set the start tile's pipe type based on directions to neighbors
+			directionLabels := make([]string, 0, len(connectedNeighbors))
+			for _, d := range maps.Keys(connectedNeighbors) {
+				directionLabels = append(directionLabels, string(d.ToLabel()))
+			}
+			pipeTypeLabel := strings.Join(directionLabels, "_")
+			currentTile.PipeType = GetPipeTypeFromLabel(pipeTypeLabel)
+		}
+		// coming back to start tile means we're done
+		if orb.Point(nextTile.Location).Equal(orb.Point(startTile.Location)){
+			break;
+		}
+		// Set up for next tile on the path
+		currentTile = nextTile
+		currentDirection = nextDirection
 	}
+	// TODO: set up (Path).Sides from (Path).Steps
+	return path, nil
 }
 
-func (m *Map) GetConnectedTiles(from Direction, t *Tile) *map[Direction]*Tile {
-	connectedTiles := make(map[Direction]*Tile)
-
-	if from != North && t.ConnectsTo(North) && t.Row() > 0 {
-		if nt := m.TileAt(t.Row()-1, t.Col()); nt.ConnectsTo(South) {
-			connectedTiles[South] = nt
-		}
+func (m *Map) GetNeighbor(t *Tile, d Direction) (*Tile, Direction) {
+	r, c := GetRowCol(t.Location)
+	switch d {
+	case DIR_NORTH:
+		r--
+	case DIR_SOUTH:
+		r++
+	case DIR_EAST:
+		c++
+	case DIR_WEST:
+		c--
+	default:
+		return nil, d
 	}
-	if from != South && t.ConnectsTo(South) && t.Row() < m.RowCount()-1 {
-		if nt := m.TileAt(t.Row()+1, t.Col()); nt.ConnectsTo(North) {
-			connectedTiles[North] = nt
-		}
-	}
-	if from != East && t.ConnectsTo(East) && t.Col() < m.ColCount()-1 {
-		if nt := m.TileAt(t.Row(), t.Col()+1); nt.ConnectsTo(West) {
-			connectedTiles[West] = nt
-		}
-	}
-	if from != West && t.ConnectsTo(West) && t.Col() > 0 {
-		if nt := m.TileAt(t.Row(), t.Col()-1); nt.ConnectsTo(East) {
-			connectedTiles[East] = nt
-		}
-	}
-
-	if len(connectedTiles) > 0 {
-		return &connectedTiles
-	} else {
-		return nil
-	}
+	return (*m).TileAt(r, c), d
 }
 
-func (m Map) Row(row int) *TileList {
-	tileList := new(TileList)
-	*tileList = make(TileList, 0, len(*m.Tiles[row]))
-	copy(*tileList, *m.Tiles[row])
-	return m.Tiles[row]
+func (m *Map) GetConnectedNeighbors(t *Tile, d Direction) *map[Direction]*Tile {
+	connectedNeighbors := make(map[Direction]*Tile)
+	var neighborTile *Tile
+	directions := []Direction{DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST}
+	for _, neighborDirection := range directions {
+		if neighborTile, _ = m.GetNeighbor(t, d); neighborTile != nil {
+			if t.CanConnectTo(neighborDirection) && neighborTile.CanConnectTo(d.GetOppositeDirection()) {
+				connectedNeighbors[neighborDirection] = neighborTile
+			}
+		}
+	}
+	return &connectedNeighbors
 }
 
 func (m Map) RowCount() int {
-	return len(m.Tiles)
+	return m.rowCount
 }
 
 func (m *Map) PathLength() int {
-	return len(*m.Path) / 2
+	return len(m.Path.Steps) / 2
 }
 
-func (m *Map) SetTile(row, col int, t *Tile) {
-	(*m.Tiles[row])[col] = *t
-}
-
-func (m *Map) TileAt(row, col int) *Tile {
-	return &(*m.Tiles[row])[col]
-}
