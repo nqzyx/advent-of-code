@@ -3,7 +3,8 @@
         "camelcards",
         "dijkstrajs",
         "nodemap",
-        "nqzyx"
+        "nqzyx",
+        "paulmach"
     ],
     "gopls": {
         "ui.semanticTokens": true,
