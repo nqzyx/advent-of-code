@@ -17,6 +17,7 @@ use (
 	./cmd/day09/oasis
 	./cmd/day10
 	./cmd/day10/pipes
+	./cmd/day11
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref

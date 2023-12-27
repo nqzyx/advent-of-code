@@ -18,6 +18,8 @@ use (
 	./2023/cmd/day09/oasis
 	./2023/cmd/day10
 	./2023/cmd/day10/pipes
+	./2023/cmd/day11
+	./2023/cmd/day11/galaxies
 	./2023/internal/utils
 	./2023/internal/xref
 )
