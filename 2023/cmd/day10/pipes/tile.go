@@ -42,16 +42,6 @@ func (t Tile) CanConnect(d Direction) bool {
 	return t.PipeType.CanConnect(d)
 }
 
-// // (Tile).Col() int
-// func (t Tile) Col() int {
-// 	return int(orb.Point(t.Location).X())
-// }
-
-// // (Tile).Row() int
-// func (t Tile) Row() int {
-// 	return int(orb.Point(t.Location).Y())
-// }
-
 // (Tile).String string
 func (t Tile) String() string {
 	sb := new(strings.Builder)

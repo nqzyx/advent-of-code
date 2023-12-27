@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/nqzyx/advent-of-code/2023/day10/pipes"
 	"github.com/nqzyx/advent-of-code/utils"
 )
@@ -18,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	utils.PrintlnJSON(m, pleaseIndentJSON)
+	// utils.PrintlnJSON(m, pleaseIndentJSON)
 
 	answers := map[string]any{
 		"part1": func() map[string]any {
@@ -48,17 +46,17 @@ var banners = map[string]string{
 }
 
 func partOne(m *pipes.Map) (int, error) {
-	fmt.Printf(banners["beginning"], "partOne")
-	defer fmt.Printf(banners["finished"], "partOne")
+	// fmt.Printf(banners["beginning"], "partOne")
+	// defer fmt.Printf(banners["finished"], "partOne")
 
-	fmt.Printf("MAP\n---\n%v\n\n", m)
+	// fmt.Printf("MAP\n---\n%v\n\n", m)
 
 	return m.PathLength(), nil
 }
 
 func partTwo(m *pipes.Map) (int, error) {
-	fmt.Printf(banners["beginning"], "partTwo")
-	defer fmt.Printf(banners["finished"], "partTwo")
+	// fmt.Printf(banners["beginning"], "partTwo")
+	// defer fmt.Printf(banners["finished"], "partTwo")
 
 	length := len(m.Insiders) 
 
