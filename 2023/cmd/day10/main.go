@@ -35,14 +35,13 @@ func main() {
 		}(),
 	}
 
-
 	utils.WriteJSONToFile("./answers.json", answers, pleaseIndentJSON)
 	utils.PrintlnJSON(answers, pleaseIndentJSON)
 }
 
 var banners = map[string]string{
 	"beginning": ">>>------> %v: Beginning <------<<<\n\n",
-	"finished": ">>>------> %v: Finished <------<<<\n\n",
+	"finished":  ">>>------> %v: Finished <------<<<\n\n",
 }
 
 func partOne(m *pipes.Map) (int, error) {
@@ -58,7 +57,7 @@ func partTwo(m *pipes.Map) (int, error) {
 	// fmt.Printf(banners["beginning"], "partTwo")
 	// defer fmt.Printf(banners["finished"], "partTwo")
 
-	length := len(m.Insiders) 
+	length := len(m.Insiders)
 
 	return length, nil
 }

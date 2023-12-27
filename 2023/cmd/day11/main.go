@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 
@@ -17,18 +18,16 @@ func main() {
 		return len(strings.TrimSpace(inputRow)) == 0
 	})
 
-	u := galaxies.NewUniverse(input)
-
 	answers := map[string]any{
 		"part1": func() map[string]any {
-			result, err := partOne(u)
+			result, err := partOne(input)
 			return map[string]any{
 				"result": result,
 				"err":    err,
 			}
 		}(),
 		"part2": func() map[string]any {
-			result, err := partTwo(u)
+			result, err := partTwo(input)
 			return map[string]any{
 				"result": result,
 				"err":    err,
@@ -46,18 +45,25 @@ var banners = map[string]string{
 	"finished": ">>>------> %v: Finished <------<<<\n\n",
 }
 
-func partOne(u *galaxies.Universe) (int, error) {
-	// fmt.Printf(banners["beginning"], "partOne")
-	// defer fmt.Printf(banners["finished"], "partOne")
+func partOne(input *[]string) (int, error) {
+	fmt.Printf(banners["beginning"], "partOne")
+	defer fmt.Printf(banners["finished"], "partOne")
+
+	u := galaxies.NewUniverse(input, 2)
 
 	td := int(u.GetTotalDistance())
+
 
 	return td, nil
 }
 
-func partTwo(u *galaxies.Universe) (int, error) {
-	// fmt.Printf(banners["beginning"], "partTwo")
-	// defer fmt.Printf(banners["finished"], "partTwo")
+func partTwo(input *[]string) (int, error) {
+	fmt.Printf(banners["beginning"], "partTwo")
+	defer fmt.Printf(banners["finished"], "partTwo")
 
-	return len(*u), nil
+	u := galaxies.NewUniverse(input, 1_000_000)
+
+	td := int(u.GetTotalDistance())
+
+	return td, nil
 }
