@@ -1,10 +1,12 @@
 package pipes
 
-import (
-	"strings"
+type (
+	Direction        string
+	Directions       []Direction
+	DirectionDetails struct {
+		opposite Direction
+	}
 )
-
-type Direction string
 
 const (
 	// Cardinal Directions
@@ -15,30 +17,27 @@ const (
 	DIR_WEST    Direction = "W"
 )
 
-type Directions map[Direction]bool
+/*
+**	VARIABLES
+ */
 
-func (d Direction) GetOppositeDirection() Direction {
-	switch d {
-	case DIR_NORTH:
-		return DIR_SOUTH
-	case DIR_SOUTH:
-		return DIR_NORTH
-	case DIR_EAST:
-		return DIR_WEST
-	case DIR_WEST:
-		return DIR_EAST
-	case DIR_UNKNOWN:
-		return DIR_UNKNOWN
-	default:
-		return DIR_UNKNOWN
-	}
+var AllDirections = map[Direction]DirectionDetails{
+	DIR_NORTH:   {DIR_SOUTH},
+	DIR_SOUTH:   {DIR_NORTH},
+	DIR_EAST:    {DIR_WEST},
+	DIR_WEST:    {DIR_EAST},
+	DIR_UNKNOWN: {DIR_UNKNOWN},
 }
 
-func (d Direction) String() string {
-	return string(d)
+/*
+**	METHODS
+ */
+
+func (d Direction) Opposite() Direction {
+	return AllDirections[d].opposite
 }
 
-func (d Direction) ToLabel() string {
+func (d Direction) Name() string {
 	switch d {
 	case DIR_NORTH:
 		return "DIR_NORTH"
@@ -55,33 +54,6 @@ func (d Direction) ToLabel() string {
 	}
 }
 
-func (d1 Direction) ToPipeType(d2 Direction) PipeType {
-	if d1 == DIR_UNKNOWN || d2 == DIR_UNKNOWN {
-		return NO_PIPE
-	}
-	dLabels := make([]string, 0, 2)
-	dLabels = append(dLabels, d1.ToLabel(), d2.ToLabel())
-	ptLabel := strings.Join(dLabels, "_")
-	pt := GetPipeTypeFromLabel(ptLabel)
-	return pt
-}
-
-// helpers
-
-func GetDirectionFromLabel(l string) Direction {
-	switch l {
-	case "DIR_NORTH":
-		return DIR_NORTH
-	case "DIR_SOUTH":
-		return DIR_SOUTH
-	case "DIR_EAST":
-		return DIR_EAST
-	case "DIR_WEST":
-		return DIR_WEST
-	case "DIR_UNKNOWN":
-		return DIR_UNKNOWN
-	default:
-		return DIR_UNKNOWN
-	}
-
+func (d Direction) String() string {
+	return d.Name()[len("DIR_"):]
 }

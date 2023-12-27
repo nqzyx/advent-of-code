@@ -1,96 +1,88 @@
 package pipes
 
-import "strings"
+import (
+	"slices"
 
-type PipeType string
-
-const (
-	NORTH_SOUTH_PIPE PipeType = "|"
-	NORTH_EAST_PIPE  PipeType = "L"
-	NORTH_WEST_PIPE  PipeType = "J"
-	SOUTH_EAST_PIPE  PipeType = "F"
-	SOUTH_NORTH_PIPE          = NORTH_SOUTH_PIPE
-	SOUTH_WEST_PIPE  PipeType = "7"
-	EAST_NORTH_PIPE           = NORTH_EAST_PIPE
-	EAST_SOUTH_PIPE           = SOUTH_EAST_PIPE
-	EAST_WEST_PIPE   PipeType = "-"
-	WEST_EAST_PIPE            = EAST_WEST_PIPE
-	WEST_NORTH_PIPE           = NORTH_WEST_PIPE
-	WEST_SOUTH_PIPE           = SOUTH_WEST_PIPE
-	START_PIPE       PipeType = "S"
-	NO_PIPE          PipeType = "."
+	"golang.org/x/exp/maps"
 )
 
-func (pt PipeType) CanConnectTo(d Direction) bool {
-	return map[PipeType]Directions{
-		NORTH_SOUTH_PIPE: {DIR_NORTH: true, DIR_SOUTH: true},
-		NORTH_EAST_PIPE:  {DIR_NORTH: true, DIR_EAST: true},
-		NORTH_WEST_PIPE:  {DIR_NORTH: true, DIR_WEST: true},
-		SOUTH_EAST_PIPE:  {DIR_SOUTH: true, DIR_EAST: true},
-		SOUTH_WEST_PIPE:  {DIR_SOUTH: true, DIR_WEST: true},
-		EAST_WEST_PIPE:   {DIR_EAST: true, DIR_WEST: true},
-		START_PIPE:       {DIR_NORTH: true, DIR_SOUTH: true, DIR_EAST: true, DIR_WEST: true},
-		NO_PIPE:          {},
-	}[pt][d]
+type (
+	PipeType        string
+	PipeTypeDetails struct {
+		name       string
+		directions Directions
+	}
+)
+
+const (
+	PT_NORTH_SOUTH PipeType = "|"
+	PT_NORTH_EAST  PipeType = "L"
+	PT_NORTH_WEST  PipeType = "J"
+	PT_SOUTH_EAST  PipeType = "F"
+	PT_SOUTH_WEST  PipeType = "7"
+	PT_EAST_WEST   PipeType = "-"
+	PT_START       PipeType = "S"
+	PT_NONE        PipeType = "."
+)
+
+var allPipeTypes = map[PipeType]PipeTypeDetails{
+	PT_NORTH_SOUTH: {"PT_NORTH_SOUTH", Directions{DIR_NORTH, DIR_SOUTH}},
+	PT_NORTH_EAST:  {"PT_NORTH_EAST", Directions{DIR_NORTH, DIR_EAST}},
+	PT_NORTH_WEST:  {"PT_NORTH_WEST", Directions{DIR_NORTH, DIR_WEST}},
+	PT_SOUTH_EAST:  {"PT_SOUTH_EAST", Directions{DIR_SOUTH, DIR_EAST}},
+	PT_SOUTH_WEST:  {"PT_SOUTH_WEST", Directions{DIR_SOUTH, DIR_WEST}},
+	PT_EAST_WEST:   {"PT_EAST_WEST", Directions{DIR_EAST, DIR_WEST}},
+	PT_START:       {"PT_START", Directions{DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST}},
+	PT_NONE:        {"PT_NONE", Directions{}},
 }
 
-func GetPipeTypeFromLabel(pt string) PipeType {
-	switch pt {
-	case "NORTH_SOUTH_PIPE":
-		return NORTH_SOUTH_PIPE
-	case "NORTH_EAST_PIPE":
-		return NORTH_EAST_PIPE
-	case "NORTH_WEST_PIPE":
-		return NORTH_WEST_PIPE
-	case "SOUTH_EAST_PIPE":
-		return SOUTH_EAST_PIPE
-	case "SOUTH_WEST_PIPE":
-		return SOUTH_WEST_PIPE
-	case "EAST_WEST_PIPE":
-		return EAST_WEST_PIPE
-	case "START_PIPE":
-		return START_PIPE
-	case "NO_PIPE":
-		return NO_PIPE
-	}
-	return NO_PIPE
+/*
+**	METHODS
+ */
+
+func (pt PipeType) CanConnect(d Direction) bool {
+	return slices.Contains(allPipeTypes[pt].directions, d)
 }
 
-func (t PipeType) String() string {
-	return string(t)
+func (pt PipeType) ToDirections() (da Directions) {
+	if ptd, ok := allPipeTypes[pt]; ok {
+		return ptd.directions
+	} else {
+		return Directions{}
+	}
 }
 
-func (t PipeType) ToDirections() []Direction {
-	if t == START_PIPE || t == NO_PIPE {
-		return nil
+func (pt PipeType) Name() (ptName string) {
+	if ptd, ok := allPipeTypes[pt]; ok {
+		return ptd.name
+	} else {
+		return string(pt)
 	}
-	directions := make([]Direction, 0, 2)
-	ptLabel := t.ToLabel()
-	dLabels := strings.Split(ptLabel, "_")
-	for _, dLabel := range dLabels[0 : len(dLabels)-1] { //lop off "PIPE"
-		directions = append(directions, GetDirectionFromLabel(dLabel))
-	}
-	return directions
 }
 
-func (t PipeType) ToLabel() string {
-	switch t {
-	case NORTH_SOUTH_PIPE:
-		return "NORTH_SOUTH_PIPE"
-	case NORTH_EAST_PIPE:
-		return "NORTH_EAST_PIPE"
-	case NORTH_WEST_PIPE:
-		return "NORTH_WEST_PIPE"
-	case SOUTH_EAST_PIPE:
-		return "SOUTH_EAST_PIPE"
-	case SOUTH_WEST_PIPE:
-		return "SOUTH_WEST_PIPE"
-	case EAST_WEST_PIPE:
-		return "EAST_WEST_PIPE"
-	case START_PIPE:
-		return "START_PIPE"
-	case NO_PIPE:
-		return "NO_PIPE"
+/*
+**	INTERFACES
+ */
+
+// (PipeType).String() string
+func (pt PipeType) String() string {
+	if ptd, ok := allPipeTypes[pt]; ok {
+		return ptd.name[len("PT_"):]
+	} else {
+		return string(pt)
 	}
-	return string(t)
+}
+
+/*
+**	HELPERS
+ */
+
+// StringToPipeType(pt) PipeType
+func GetPipeType(ptName string) PipeType {
+	for _, pt := range maps.Keys(allPipeTypes) {
+		if ptName == string(pt) || ptName == pt.String() || ptName == pt.Name() {
+			return pt
+		}
+	}
+	return PT_NONE
 }
