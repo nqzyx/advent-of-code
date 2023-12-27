@@ -16,7 +16,6 @@ func NewPath() *Path {
 }
 
 func (p *Path) Add(t *Tile) {
-	fmt.Printf("Tile %v added to path", t)
 	p.AddLocation(t.Location)
 }
 
