@@ -20,17 +20,25 @@ func NewUniverse(input *[]string) *Universe {
 	// assume all the rows & cols are empty
 	for ir, row := range *input {
 		fr := float64(ir) // convenience
+		//
+		// TODO: if the row is empty (all "."), 
+		// 		 set flag to insert row
+		//
 		for ic, col := range row {
 			fc := float64(ic)
 			if col == '#' {
 				g := orb.Point{fr, fc}
 				// all rows from here to rows need 
-				insertRowCount[ir] = true
-				insertColCount[ic] = true
+				// insertRowCount[fr] = 
+				// insertColCount[fc] = 1
 				// add galaxy (g) to the universe (u)
 				u = append(u, g)
 			}
 		}
+		//
+		// TODO: if the column is empty (all "."), set
+		// 		 flat to insert row
+		//
 	}
 
 
