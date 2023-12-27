@@ -202,10 +202,6 @@ func (m *Map) GetConnectedNeighbors(t *Tile) *map[Direction]*Tile {
 	nArr := make(map[Direction]*Tile)
 	dArr := t.PipeType.ToDirections()
 
-	// Debugging
-	// fmt.Printf("t: %v\n", *t)
-	// fmt.Printf("dArr: %v\n", dArr)
-
 	for _, d := range dArr {
 		if n, ok := m.GetNeighbor(t, d); !ok || n == nil {
 			continue
