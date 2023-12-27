@@ -9,7 +9,7 @@ import (
 
 func main() {
 	input := utils.GetInput()
-	report := oasis.NewReport(input)
+	report := oasis.NewReport(*input)
 
 	answers := make(map[string]any, 2)
 

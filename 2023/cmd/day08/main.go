@@ -49,7 +49,7 @@ func main() {
 	var answer map[string]any
 
 	answer = make(map[string]any)
-	if moves, err := partOne(input); err == nil {
+	if moves, err := partOne(*input); err == nil {
 		answer["moves"] = moves
 	} else {
 		answer["err"] = err
@@ -57,7 +57,7 @@ func main() {
 	answers["part1"] = answer
 
 	answer = make(map[string]any)
-	if moves, err := partTwo(input); err == nil {
+	if moves, err := partTwo(*input); err == nil {
 		answer["moves"] = moves
 	} else {
 		answer["err"] = err
