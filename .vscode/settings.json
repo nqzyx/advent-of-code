@@ -4,7 +4,8 @@
         "dijkstrajs",
         "nodemap",
         "nqzyx",
-        "paulmach"
+        "paulmach",
+        "Peucker"
     ],
     "gopls": {
         "ui.semanticTokens": true,

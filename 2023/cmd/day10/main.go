@@ -8,16 +8,17 @@ import (
 )
 
 func main() {
+	pleaseIndentJSON := true
 	inputData := utils.GetInput()
 
 	var m *pipes.Map
 	var err error
 
-	if m, err = pipes.NewMap(&inputData); err != nil {
+	if m, err = pipes.NewMap(inputData); err != nil {
 		panic(err)
 	}
 
-	// fmt.Println("Map:", m)
+	utils.PrintlnJSON(m, pleaseIndentJSON)
 
 	answers := map[string]any{
 		"part1": func() map[string]any {
@@ -36,34 +37,30 @@ func main() {
 		}(),
 	}
 
-	pleaseIndent := true
 
-	utils.WriteJSONToFile("./answers.json", answers, pleaseIndent)
-	utils.PrintlnJSON(answers, pleaseIndent)
+	utils.WriteJSONToFile("./answers.json", answers, pleaseIndentJSON)
+	utils.PrintlnJSON(answers, pleaseIndentJSON)
 }
 
-var beginning string = ">>>------> %v: Beginning <------<<<\n\n"
-var finished string = ">>>------> %v: Finished <------<<<\n\n"
+var banners = map[string]string{
+	"beginning": ">>>------> %v: Beginning <------<<<\n\n",
+	"finished": ">>>------> %v: Finished <------<<<\n\n",
+}
 
 func partOne(m *pipes.Map) (int, error) {
-	fmt.Printf(beginning, "partOne")
-	defer fmt.Printf(finished, "partOne")
+	fmt.Printf(banners["beginning"], "partOne")
+	defer fmt.Printf(banners["finished"], "partOne")
 
 	fmt.Printf("MAP\n---\n%v\n\n", m)
-	fmt.Printf("Insiders\n--------\n%v\n\n", *m.Insiders)
 
 	return m.PathLength(), nil
 }
 
 func partTwo(m *pipes.Map) (int, error) {
-	fmt.Printf(beginning, "partTwo")
-	defer fmt.Printf(finished, "partTwo")
+	fmt.Printf(banners["beginning"], "partTwo")
+	defer fmt.Printf(banners["finished"], "partTwo")
 
-	length := len(*m.Insiders)
-
-	fmt.Printf("Path: %v\n\n", *m.Path)
-
-	fmt.Printf("Insiders: %v\n\n", *m.Insiders)
+	length := len(m.Insiders) 
 
 	return length, nil
 }

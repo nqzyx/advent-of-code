@@ -1,14 +1,17 @@
 package pipes
 
 import (
-	"github.com/paulmach/orb"
+	"fmt"
+	"strings"
+	// "github.com/paulmach/orb"
 )
 
 type (
-	Location  orb.Point
-	Neighbors map[Direction]*Tile
+	Neighbor *Tile
 
-	Tile/* MAYBE */ struct {
+	Neighbors map[Direction]Neighbor
+
+	Tile struct {
 		Location  Location
 		PipeType  PipeType
 		OnPath    bool
@@ -16,6 +19,11 @@ type (
 	}
 )
 
+/*
+**	Constructors
+ */
+
+// NewTile(row, col int, pipeType PipeType, onPath bool) *Tile
 func NewTile(row, col int, pipeType PipeType, onPath bool) *Tile {
 	return &Tile{
 		Location: Location{float64(row), float64(col)},
@@ -24,19 +32,46 @@ func NewTile(row, col int, pipeType PipeType, onPath bool) *Tile {
 	}
 }
 
-func (t Tile) Col() int {
-	return int(t.Location[1])
-}
-
-func (t Tile) Row() int {
-	return int(t.Location[0])
-}
-
-func (t Tile) CanConnectTo(d Direction) bool {
+// (Tile).CanConnectTo(d Direction) bool
+func (t Tile) CanConnect(d Direction) bool {
 	if t.Neighbors != nil {
 		if _, ok := t.Neighbors[d]; ok {
 			return true
 		}
 	}
-	return t.PipeType.CanConnectTo(d)
+	return t.PipeType.CanConnect(d)
+}
+
+// // (Tile).Col() int
+// func (t Tile) Col() int {
+// 	return int(orb.Point(t.Location).X())
+// }
+
+// // (Tile).Row() int
+// func (t Tile) Row() int {
+// 	return int(orb.Point(t.Location).Y())
+// }
+
+// (Tile).String string
+func (t Tile) String() string {
+	sb := new(strings.Builder)
+	sb.WriteString("{")
+	sb.WriteString(
+		strings.Join([]string{
+			fmt.Sprintf("%v", t.Location),
+			fmt.Sprintf("Type:%v", t.PipeType),
+			fmt.Sprintf("Path:%v", t.OnPath),
+		},
+			",",
+		),
+	)
+	sb.WriteString(",Neighbors:[")
+	for d, n := range t.Neighbors {
+		sb.WriteString(fmt.Sprintf("{%v:%v}", d,
+			fmt.Sprintf("{%v,OnPath:%v,%v}", n.Location, n.OnPath, n.PipeType),
+		))
+	}
+	sb.WriteString("]")
+	sb.WriteString("}")
+	return sb.String()
 }
