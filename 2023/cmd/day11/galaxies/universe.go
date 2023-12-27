@@ -3,6 +3,7 @@ package galaxies
 import (
 	"fmt"
 	"math"
+	"strings"
 
 	"github.com/paulmach/orb"
 )
@@ -20,18 +21,13 @@ func NewUniverse(input *[]string) *Universe {
 	// assume all the rows & cols are empty
 	for ir, row := range *input {
 		fr := float64(ir) // convenience
-		//
-		// TODO: if the row is empty (all "."), 
-		// 		 set flag to insert row
-		//
+		if len(strings.ReplaceAll(row, ".", "")) == 0 {
+			insertRowCount[fr] += 1.0
+		}
 		for ic, col := range row {
 			fc := float64(ic)
 			if col == '#' {
 				g := orb.Point{fr, fc}
-				// all rows from here to rows need 
-				// insertRowCount[fr] = 
-				// insertColCount[fc] = 1
-				// add galaxy (g) to the universe (u)
 				u = append(u, g)
 			}
 		}
@@ -39,6 +35,9 @@ func NewUniverse(input *[]string) *Universe {
 		// TODO: if the column is empty (all "."), set
 		// 		 flat to insert row
 		//
+	}
+	for c:=0; c<cols; c+=1 {
+		
 	}
 
 
