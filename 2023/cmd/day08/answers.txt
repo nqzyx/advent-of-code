@@ -1,8 +1,8 @@
 {
   "part1": {
-    "moves": 15529
+    "moves": 2
   },
   "part2": {
-    "moves": 8245452805243
+    "moves": 2
   }
 }

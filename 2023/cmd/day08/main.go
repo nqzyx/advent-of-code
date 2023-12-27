@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	"nqzyx.xyz/advent-of-code/2023/day08/nodemap"
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-code/2023/day08/nodemap"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
-func partOne(input []string)  (moves int, err error) {
+func partOne(input []string) (moves int, err error) {
 	if debug {
-		fmt.Println("partOne: Beginning")  
+		fmt.Println("partOne: Beginning")
 		defer fmt.Println("partOne: Finished")
 	}
 
@@ -38,17 +38,18 @@ func partTwo(input []string) (moves int, err error) {
 	}
 	return moves, nil
 }
+
 var debug bool
 
 func main() {
 	debug = false
 	input := utils.GetInput()
-	answers := make(map[string]map[string]any, 2);
+	answers := make(map[string]map[string]any, 2)
 
 	var answer map[string]any
 
 	answer = make(map[string]any)
-	if moves, err := partOne(input); err == nil {
+	if moves, err := partOne(*input); err == nil {
 		answer["moves"] = moves
 	} else {
 		answer["err"] = err
@@ -56,7 +57,7 @@ func main() {
 	answers["part1"] = answer
 
 	answer = make(map[string]any)
-	if moves, err := partTwo(input); err == nil {
+	if moves, err := partTwo(*input); err == nil {
 		answer["moves"] = moves
 	} else {
 		answer["err"] = err

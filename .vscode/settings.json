@@ -3,11 +3,18 @@
         "camelcards",
         "dijkstrajs",
         "nodemap",
-        "nqzyx"
+        "nqzyx",
+        "paulmach",
+        "Peucker"
     ],
     "gopls": {
         "ui.semanticTokens": true,
         "formatting.gofumpt": true,
         "verboseOutput": true
-    }
+    },
+    "git-graph.repository.commits.showSignatureStatus": true,
+    "git.alwaysSignOff": true,
+    "git.enableCommitSigning": true,
+    "git-graph.repository.sign.commits": true,
+    "git-graph.repository.sign.tags": true
 }

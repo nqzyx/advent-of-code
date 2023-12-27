@@ -6,10 +6,11 @@ import (
 	"strings"
 )
 
-func GetInput() []string {
+func GetInput() *[]string {
 	ba, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		panic(err)
 	}
-	return strings.Split(string(ba), "\n")
+	s := strings.Split(string(ba), "\n")
+	return &s
 }

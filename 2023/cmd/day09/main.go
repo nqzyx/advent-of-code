@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	"nqzyx.xyz/advent-of-code/2023/day09/oasis"
-	"nqzyx.xyz/advent-of-code/2023/utils"
+	"github.com/nqzyx/advent-of-code/2023/day09/oasis"
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 func main() {
 	input := utils.GetInput()
-	report := oasis.NewReport(input)
+	report := oasis.NewReport(*input)
 
 	answers := make(map[string]any, 2)
 
