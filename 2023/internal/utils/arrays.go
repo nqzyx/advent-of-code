@@ -18,7 +18,7 @@ func NewNumericArrayFromString[T Numeric](str string) (result []T) {
 func NewNumericArrayFromStringWithSeparator[T Numeric](str string, sep string) (result []T) {
 	sArr := strings.Split(strings.TrimSpace(str), sep)
 	result = make([]T, 0, len(sArr))
-	for i, s := range sArr {
+	for _, s := range sArr {
 		var x T
 		if l, err := fmt.Sscanf(s, "%v", &x); err != nil {
 			panic(err)
@@ -26,7 +26,7 @@ func NewNumericArrayFromStringWithSeparator[T Numeric](str string, sep string) (
 			if l == 0 {
 				return
 			}
-			result[i] = T(x)
+			result = append(result, T(x))
 		}
 	}
 	return

@@ -18,6 +18,8 @@ use (
 	./cmd/day10
 	./cmd/day10/pipes
 	./cmd/day11
+	./cmd/day12
+	./cmd/day12/springs
 	./cmd/jsontest
 	./internal/utils
 	./internal/xref
