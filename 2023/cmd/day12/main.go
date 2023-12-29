@@ -48,20 +48,28 @@ func partOne(input *[]string) (int, error) {
 	fmt.Printf(banners["beginning"], "partOne")
 	defer fmt.Printf(banners["finished"], "partOne")
 
-	crs := springs.NewReport(input)
+	cr := springs.NewConditionReport(input)
 
-	fmt.Println("crs:", crs)
+	totalSolutions := 0
+	for i, r := range *cr {
+		if m, err := r.MaxSolutions(); err != nil {
+			return 0, err
+		} else {
+			totalSolutions += m
+			fmt.Printf("cr[%v]:{solutions:%v}\n", i, m)
+		}
+	}
 
-	return len(*crs), nil
+	return totalSolutions, nil
 }
 
 func partTwo(input *[]string) (int, error) {
 	fmt.Printf(banners["beginning"], "partTwo")
 	defer fmt.Printf(banners["finished"], "partTwo")
 
-	crs := springs.NewReport(input)
+	cr := springs.NewConditionReport(input)
 
-	fmt.Println("crs:", crs)
+	fmt.Println("cr:", cr)
 
-	return len(*crs), nil
+	return len(*cr), nil
 }

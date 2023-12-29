@@ -1,64 +1,86 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"slices"
 )
 
+func GetBaseSeparatorCount(numGroups int) (result []int) {
+	numSeparators := numGroups + 1
+	result = make([]int, numSeparators)
+	for i := range result {
+		if i == 0 || i == numSeparators-1 {
+			continue
+		}
+		result[i] = 1
+	}
+	return
+}
+
+func GetIdentityArrays(size int) (result [][]int) {
+	result = make([][]int, 0)
+	for i := 0; i < size; i++ {
+		idArr := make([]int, size)
+		idArr[i] = 1
+		result = append(result, idArr)
+	}
+	return
+}
+
+func GetSeparatorCounts(paddingLength, numGroups int) (result [][]int) {
+	sepCnt := numGroups + 1
+	result = make([][]int, 0)
+	for p := paddingLength; p >= 0; p-- {
+		if p == 0 {
+			result = append(result, GetBaseSeparatorCount(numGroups))
+		}
+		prevResult := GetSeparatorCounts(p-1, numGroups)
+		for _, prev := range prevResult {
+			for _, idArr := range GetIdentityArrays(sepCnt) {
+				na := make([]int, sepCnt)
+				for s := 0; s < sepCnt; s++ {
+					na[s] = idArr[s] + prev[s]
+				}
+				result = append(result, na)
+			}
+		}
+	}
+	return
+}
+
+func RecursiveDots(paddingLength, numGroups int, prevResult [][]int) (result [][]int) {
+	var dots [][]int
+
+	for i := paddingLength - 1; i >= 0; i-- {
+		if paddingLength > 1 {
+			dots = RecursiveDots(paddingLength-1, numGroups, prevResult)
+			for c := range dots {
+				dots[c] = slices.Insert(dots[c], 0, i)
+			}
+		} else {
+			for j := 0; j <= numGroups; j++ {
+				start := make([]int, numGroups+1)
+				start[j] = 1
+				result = append(result, start)
+			}
+			return result
+		}
+	}
+
+	/*set := make(map[[]int]bool, 0, len(dots))
+	for _, solution := range dots {
+		set[solution] = true
+	}
+	for solution := range set {
+		result = append(result, solution)
+	}*/
+	return
+}
+
 func main() {
-	type Person struct {
-		Name     string
-		Relation string
-		Phone    string
-		Age      uint8
-		Family   []Person
-		Friends  []string
-	}
-	t := Person{
-		Name:     "Rick Culpepper",
-		Relation: "Self",
-		Phone:    "615-521-5763",
-		Age:      64,
-		Family: []Person{
-			{
-				Name:     "Josie Culpepper",
-				Relation: "Spouse",
-				Phone:    "615-428-0991",
-				Age:      50,
-			},
-			{
-				Name:     "Marshall Culpepper",
-				Relation: "Son",
-				Age:      41,
-				Family: []Person{
-					{
-						Name:     "Paige Culpepper",
-						Relation: "Spouse",
-						Age:      41,
-					},
-					{
-						Name:     "Kayla Culpepper",
-						Relation: "Daughter",
-						Age:      14,
-					},
-					{
-						Name:     "Wyatt Culpepper",
-						Relation: "Son",
-						Age:      10,
-					},
-				},
-			},
-		},
-		Friends: []string{
-			"Tommy Gautier",
-			"Ray \"Buzzard\" Hudson",
-			"David",
-			"John Flores",
-		},
-	}
-	if ba, e := json.MarshalIndent(t, "", "  "); e != nil {
-		panic(e)
-	} else {
-		fmt.Println(string(ba))
-	}
+	// result := RecursiveDots(2, 3)
+	result := GetBaseSeparatorCount(7)
+	// result := GetIdentityArrays(5)
+	// result := GetSeparatorCounts(3, 5)
+	fmt.Printf("%v\n", result)
 }
