@@ -28,33 +28,33 @@ type AlmanacInterface interface {
 var _ AlmanacInterface = &Almanac{}
 
 func NewAlmanac(stringData []string, part1 bool) *Almanac {
-	Almanac := new(Almanac)
-	Almanac.XrefMap = make(map[string]xref.Xref)
-	Almanac.part1 = part1
+	almanac := new(Almanac)
+	almanac.XrefMap = make(map[string]xref.Xref)
+	almanac.part1 = part1
 	for _, data := range stringData {
 		switch true {
 		case strings.HasPrefix(data, "seeds:"):
 			if part1 {
-				Almanac.AddSeeds(data)
+				almanac.AddSeeds(data)
 			} else {
-				Almanac.AddSeedRanges(data)
+				almanac.AddSeedRanges(data)
 			}
 		default:
-			Almanac.AddXrefMap(data)
+			almanac.AddXrefMap(data)
 		}
 	}
-	return Almanac
+	return almanac
 }
 
 func (f *Almanac) AddSeeds(seedData string) *Almanac {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
-	f.Seeds = utils.NewNumericArrayFromString[uint64](seeds)
+	f.Seeds = utils.NewIntArraySpace[uint64](seeds)
 	return f
 }
 
 func (f *Almanac) AddSeedRanges(seedData string) *Almanac {
 	seeds := regexp.MustCompile("^seeds: *").ReplaceAllString(seedData, "")
-	seedArray := utils.NewNumericArrayFromString[uint64](seeds)
+	seedArray := utils.NewIntArraySpace[uint64](seeds)
 	for i := 0; i < len(seedArray); i += 2 {
 		rng, _ := xref.NewRange(seedArray[i], seedArray[i+1])
 		f.SeedRanges = append(f.SeedRanges, *rng)
@@ -71,20 +71,20 @@ func (f *Almanac) AddXrefMap(xrefMapData string) *Almanac {
 		stringArray := strings.Split(name, "-to-")
 		return stringArray[0], stringArray[1]
 	}()
-	// fmt.Printf("xref.NewXref(%v, %v, %v, %v)\n", name, source, destination, len(xrefData))
-	xref := xref.NewXref(name, source, destination, len(xrefData))
+	// fmt.Printf("xr.NewXref(%v, %v, %v, %v)\n", name, source, destination, len(xrefData))
+	xr := xref.NewXref(name, source, destination, len(xrefData))
 	for _, rangeData := range xrefData {
 		destinationValue, sourceValue, length := func(s string) (uint64, uint64, uint64) {
-			uintArray := utils.NewNumericArrayFromString[uint64](s)
+			uintArray := utils.NewIntArraySpace[uint64](s)
 			return uintArray[0], uintArray[1], uintArray[2]
 		}(rangeData)
 		if length > 0 {
 			// fmt.Printf("xref.AddRange(%v, %v, %v)\n", sourceValue, destinationValue, length)
-			xref.AddRange(sourceValue, destinationValue, length)
+			xr.AddRange(sourceValue, destinationValue, length)
 		}
 	}
-	fmt.Printf("%v: %v\n", name, *xref)
-	f.XrefMap[name] = *xref
+	fmt.Printf("%v: %v\n", name, *xr)
+	f.XrefMap[name] = *xr
 	return f
 }
 
