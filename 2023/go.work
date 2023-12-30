@@ -20,7 +20,7 @@ use (
 	./cmd/day11
 	./cmd/day12
 	./cmd/day12/springs
-	./cmd/jsontest
+	./cmd/playground
 	./internal/utils
 	./internal/xref
 )

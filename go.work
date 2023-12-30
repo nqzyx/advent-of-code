@@ -22,7 +22,7 @@ use (
 	./2023/cmd/day11/galaxies
 	./2023/cmd/day12
 	./2023/cmd/day12/springs
-	./2023/cmd/jsontest
+	./2023/cmd/playground
 	./2023/internal/utils
 	./2023/internal/xref
 )
