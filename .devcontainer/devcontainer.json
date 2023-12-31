@@ -121,6 +121,7 @@
 
         "mikestead.dotenv", // ----------------------- DotENV
         "nhoizey.gremlins", // ----------------------- Gremlins tracker for Visual Studio Code
+        "njzy.stats-bar", // ------------------------- Status Bar (Memory & CPU)
         "streetsidesoftware.code-spell-checker", // -- Code Spell Checker
         "vscode-icons-team.vscode-icons" // ---------- vscode-icons
       ]
