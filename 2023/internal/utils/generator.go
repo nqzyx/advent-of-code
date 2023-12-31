@@ -27,7 +27,11 @@ type Generator[T TGenerator] struct {
 	counters       GeneratorCounters
 }
 
-var startExceedsMaxErrorMessage string = "The value of start (%v) must be less than the value of maximum (%v)."
+const (
+	// GS_SIZE_EXCEEDS_MAXIMUM   string = "the value of size (%v) must be less than the value of maximum (%v)"
+	GEN_START_EXCEEDS_MAXIMUM string = "the value of start (%v) must be less than the value of maximum (%v)"
+	GS_SIZE_TO_SMALL          string = "the size of the set (%v) must be greater than zero (0)"
+)
 
 func intType[T TGenerator](v T) string {
 	return fmt.Sprintf("%T", v)
@@ -59,7 +63,7 @@ func MaxValue[T TGenerator]() T {
 
 func NewGeneratorFull[T TGenerator](start, maximum, increment T, onOverflow *GeneratorOverflowFunc[T], overflowTo *Generator[T]) (*Generator[T], error) {
 	if start > maximum {
-		return nil, fmt.Errorf(startExceedsMaxErrorMessage, start, maximum)
+		return nil, fmt.Errorf(GEN_START_EXCEEDS_MAXIMUM, start, maximum)
 	}
 	return &Generator[T]{
 		start:          start,

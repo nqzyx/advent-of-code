@@ -23,36 +23,9 @@ type GeneratorSet[T TGenerator] struct {
 	counters      GeneratorCounters
 }
 
-var sizeExceedsMaxErrorMessage string = "The value of size (%v) must be less than the value of maximum (%v)."
-
-func (gs *GeneratorSet[T]) CreateGeneratorOverflowFunc(i T) *GeneratorOverflowFunc[T] {
-	var f GeneratorOverflowFunc[T] = func(g *Generator[T]) {
-		gs.counters.Overflow++
-		if i == 0 {
-			(*gs.onOverflow)(&gs.generators)
-			return
-		}
-		gs.generators[i-1].Next()
-		nextMaximum := gs.maximum
-		for ig, g := range gs.generators {
-			if T(ig) < i {
-				nextMaximum -= g.value
-				continue
-			} else {
-				g.value = g.start
-				g.maximum = nextMaximum - T(len(gs.generators)-1-ig)
-			}
-		}
-	}
-	return &f
-}
-
 func NewGeneratorSet[T TGenerator](size T, maximum T, onOverflow GeneratorSetOverflowFunc[T]) (*GeneratorSet[T], error) {
-	if size > maximum {
-		return nil, fmt.Errorf(sizeExceedsMaxErrorMessage, size, maximum)
-	}
-	if size < 3 {
-		return nil, fmt.Errorf("the size of the set (%v) must be greater than one", size)
+	if size < 1 {
+		return nil, fmt.Errorf(GS_SIZE_TO_SMALL, size)
 	}
 
 	gs := new(GeneratorSet[T])
@@ -80,6 +53,28 @@ func MustNewGeneratorSet[T TGenerator](size T, maximum T, onOverflow GeneratorSe
 	} else {
 		return g
 	}
+}
+
+func (gs *GeneratorSet[T]) CreateGeneratorOverflowFunc(i T) *GeneratorOverflowFunc[T] {
+	var f GeneratorOverflowFunc[T] = func(g *Generator[T]) {
+		gs.counters.Overflow++
+		if i == 0 {
+			(*gs.onOverflow)(&gs.generators)
+			return
+		}
+		gs.generators[i-1].Next()
+		nextMaximum := gs.maximum
+		for ig, g := range gs.generators {
+			if T(ig) < i {
+				nextMaximum -= g.value
+				continue
+			} else {
+				g.value = g.start
+				g.maximum = nextMaximum - T(len(gs.generators)-1-ig)
+			}
+		}
+	}
+	return &f
 }
 
 func (gs *GeneratorSet[T]) Max() T {
