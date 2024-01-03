@@ -30,7 +30,7 @@ type Generator[T TGenerator] struct {
 const (
 	// GS_SIZE_EXCEEDS_MAXIMUM   string = "the value of size (%v) must be less than the value of maximum (%v)"
 	GEN_START_EXCEEDS_MAXIMUM string = "the value of start (%v) must be less than the value of maximum (%v)"
-	GS_SIZE_TO_SMALL          string = "the size of the set (%v) must be greater than zero (0)"
+	GS_SIZE_TOO_SMALL          string = "the size of the set (%v) must be greater than zero (0)"
 )
 
 func intType[T TGenerator](v T) string {

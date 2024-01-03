@@ -33,15 +33,32 @@ func main() {
 	// 	fmt.Printf("i: %v; tens: %v; ones %v\n", i, tens, ones)
 	// }
 
+	// done := false
+	// // gs := utils.MustNewGeneratorSet[uint](3, 8, signalDone)
+	// gs := utils.MustNewGeneratorSet[int64](10, 16, func(gs *utils.GeneratorCollection[int64]) { done = true })
+	// for {
+	// 	fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+	// 	if done {
+	// 		break
+	// 	}
+	// }
+	// fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+	// fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+	// fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+
+	// fmt.Printf("gs: %#v\n", gs)
 	done := false
 	// gs := utils.MustNewGeneratorSet[uint](3, 8, signalDone)
-	gs := utils.MustNewGeneratorSet[int64](10, 16, func(gs *utils.GeneratorCollection[int64]) { done = true })
+	gs := utils.MustNewGeneratorSetSeeded[int64]([]int64{0, 1, 1, 1, 1, 1, 0}, 0, func(gs *utils.GeneratorCollection[int64]) { done = true })
 	for {
 		fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
 		if done {
 			break
 		}
-		fmt.Println("")
 	}
+	fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+	fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+	fmt.Printf("gs.Next(): %v; done: %v\n", gs.Next(), done)
+
 	fmt.Printf("gs: %#v\n", gs)
 }
