@@ -51,13 +51,13 @@ func partOne(input *[]string) (int, error) {
 	cr := springs.NewConditionReport(input)
 
 	totalSolutions := 0
-	for i, r := range *cr {
-		if m, err := r.MaxSolutions(); err != nil {
-			return 0, err
-		} else {
-			totalSolutions += m
-			fmt.Printf("cr[%v]:{solutions:%v}\n", i, m)
-		}
+	for r, crRow := range *cr {
+		matches := crRow.Matches()
+		totalSolutions += len(matches)
+		fmt.Printf("#%v: Report: %-30v\tGroups: %v\tMatches: %2v\n", r+1, string(crRow.SpringConditions), crRow.DamagedSpringGroups, len(matches))
+		// for m, match := range matches {
+		// 	fmt.Printf("\t%v: %v\n", m+1, match)
+		// }
 	}
 
 	return totalSolutions, nil
@@ -68,8 +68,6 @@ func partTwo(input *[]string) (int, error) {
 	defer fmt.Printf(banners["finished"], "partTwo")
 
 	cr := springs.NewConditionReport(input)
-
-	fmt.Println("cr:", cr)
 
 	return len(*cr), nil
 }

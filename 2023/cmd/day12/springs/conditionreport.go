@@ -3,59 +3,99 @@ package springs
 import (
 	"fmt"
 	"regexp"
-	"slices"
 	"strings"
+
+	"github.com/nqzyx/advent-of-code/utils"
 )
 
 type (
 	ConditionReportRow struct {
-		SpringConditions SpringConditions
-		BrokenGroups     BrokenGroups
+		SpringConditions    []SpringCondition
+		DamagedSpringGroups DamagedSpringGroups
 	}
 	ConditionReport []ConditionReportRow
 )
 
 func NewConditionReport(crInput *[]string) *ConditionReport {
 	report := make(ConditionReport, 0, len(*crInput))
-	for _, crInRow := range *crInput {
-		iParts := strings.Split(strings.TrimSpace(crInRow), " ")
-		sc := *NewSpringConditions(iParts[0])
-		bg := *NewBrokenGroups(iParts[1])
-		report = append(report, ConditionReportRow{sc, bg})
+	for _, crInputRow := range *crInput {
+		crRow := NewConditionReportRow(crInputRow)
+		report = append(report, *crRow)
 	}
 	return &report
 }
 
-func (crr *ConditionReportRow) MaxPadding() int {
-	l := len(crr.SpringConditions)
-	m := crr.BrokenGroups.MinLength()
-	return l - m
-}
-
-func AddMatch(ma [][]int, m []int) [][]int {
-	if !slices.ContainsFunc[[][]int, []int](ma, func(chk []int) bool {
-		return slices.Equal(m, chk)
-	}) {
-		return append(ma, m)
+func NewConditionReportRow(crrInput string) *ConditionReportRow {
+	iParts := strings.Split(strings.TrimSpace(crrInput), " ")
+	return &ConditionReportRow{
+		*NewSpringConditionArray(iParts[0]),
+		*NewDamagedSpringGroups(iParts[1]),
 	}
-	return ma
 }
 
-func (crr *ConditionReportRow) MaxSolutions() (int, error) {
-	re := regexp.MustCompile(crr.BrokenGroups.RegexpString())
-	scs := string(crr.SpringConditions)
-	fmt.Println("s:", scs, ", regex:", re.String())
-	var matches [][]int
-	for p := 0; p < crr.MaxPadding()+1; p++ {
-		li, ri := p, len(scs)-p
-		for _, s := range []string{scs[li:], scs[:ri]} {
-			lma := re.FindAllStringIndex(s, -1)
-			fmt.Printf("s: %v, ma: %v, matches: %v\n", s, lma, len(lma))
-			for _, m := range lma {
-				matches = AddMatch(matches, m)
+func (crr *ConditionReportRow) MaxPadding() int {
+	return utils.Max(len(string(crr.SpringConditions))-crr.DamagedSpringGroups.MinMatchLength(), 0)
+}
+
+func (crr *ConditionReportRow) Matches() []string {
+	conditionReports := string(crr.SpringConditions)
+	groupMatchers := crr.DamagedSpringGroups.GroupMatchers()
+	separatorMatcher := crr.DamagedSpringGroups.SeparatorMatcher()
+	maxPadding := crr.MaxPadding()
+	separatorCount := len(groupMatchers) + 1
+
+	done := false
+
+	matcherSB := new(strings.Builder)
+	for g, groupMatcher := range groupMatchers {
+		if g == 0 {
+			matcherSB.WriteString(fmt.Sprintf(separatorMatcher, g, "%v"))
+		}
+		matcherSB.WriteString(groupMatcher)
+		matcherSB.WriteString(fmt.Sprintf(separatorMatcher, g+1, "%v"))
+	}
+	rowMatcher := matcherSB.String()
+
+	genSetSeed := make([]uint, 0, separatorCount)
+	for sc := 0; sc<separatorCount; sc++ {
+		seed := uint(1)
+		if sc == 0 || sc == separatorCount -1 {
+			seed = uint(0)
+		}
+		genSetSeed = append(genSetSeed, seed)
+	} // result will be [0, 1, ... 1, 0]
+	genSetSeedArgs := []any{genSetSeed}
+
+	var matches = make([]string, 0, utils.SumOfIntegers(maxPadding)*separatorCount)
+	var matchFmt = "%v [%v:%v]"
+
+	fmt.Println("maxPadding:", maxPadding)
+
+	if maxPadding == 0 { // no need to iterate...
+		matcher := fmt.Sprintf(rowMatcher, genSetSeedArgs...)
+		loc := regexp.MustCompile(matcher).FindStringIndex(conditionReports)
+		if len(loc) != 0 {
+			for m := 0; m < len(loc); m += 2 {
+				matches = append(matches, fmt.Sprintf(matchFmt, conditionReports[loc[m]:loc[m+1]], loc[m], loc[m+1]))
 			}
 		}
-		fmt.Println("For", scs, "Totals: matches:", len(matches))
+	} else {
+		generatorSet := utils.MustNewGeneratorSetSeeded[uint](
+			genSetSeed,
+			uint(maxPadding),
+			func(gs *utils.GeneratorCollection[uint]) { done = true },
+		)
+		for separatorRepeatCounts := generatorSet.Next(); !done;  {
+			// fmt.Println("repeatCounts:", separatorRepeatCounts)
+			separatorRepeatCountsAny := []any{separatorRepeatCounts}
+			matcher := fmt.Sprintf(rowMatcher, separatorRepeatCountsAny...) 
+			loc := regexp.MustCompile(matcher).FindStringIndex(conditionReports)
+			if len(loc) != 0 {
+				for m := 0; m < len(loc); m += 2 {
+					matches = append(matches, fmt.Sprintf("%v [%v:%v]", conditionReports[loc[m]:loc[m+1]], loc[m], loc[m+1]))				
+				}
+			}
+		}
 	}
-	return len(matches), nil
+	return matches
 }
