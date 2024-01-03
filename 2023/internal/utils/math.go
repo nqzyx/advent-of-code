@@ -1,37 +1,52 @@
 package utils
 
 import (
+	"fmt"
+	"strings"
+
 	"golang.org/x/exp/constraints"
 )
 
-type SignedNumber interface {
-	constraints.Signed | constraints.Float
+func Abs[T Numeric](value T) T {
+	if value >= T(0) {
+		return value
+	}
+	if valueType := fmt.Sprintf("%T", value); strings.HasPrefix(valueType, "uint") {
+		return value
+	}
+	return 0 - value
 }
 
 func Min[T constraints.Ordered](values ...T) T {
-	var min T = values[0]
+	var minimum T = values[0]
 	for _, v := range values[1:] {
-		if v < min {
-			min = v
+		if v < minimum {
+			minimum = v
 		}
 	}
-	return min
+	return minimum
 }
 
 func Max[T constraints.Ordered](values ...T) T {
-	var max T = values[0]
+	var maximum T = values[0]
 	for _, v := range values[1:] {
-		if v > max {
-			max = v
+		if v > maximum {
+			maximum = v
 		}
 	}
-	return max
+	return maximum
 }
 
-func Abs[T SignedNumber](value T) T {
-	if value >= T(0) {
-		return value
-	} else {
-		return value * T(-1)
+func Sum[T Numeric](values ...T) T {
+	sum := values[0]
+	for _, v := range values[1:] {
+		sum += T(v)
 	}
+	return sum
+}
+
+func SumOfIntegers[T constraints.Integer](a T) T {
+	var l T = T(1)
+	var n T = a
+	return n * (a + l) / T(2)
 }

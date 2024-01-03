@@ -11,23 +11,27 @@ type Numeric interface {
 	constraints.Float | constraints.Integer
 }
 
-func NewNumericArrayFromString[T Numeric](str string) (result []T) {
-	return NewNumericArrayFromStringWithSeparator[T](str, " ")
+func NewIntArrayComma[T constraints.Integer, S ~string](s S) []T {
+	return NewIntArray[T](string(s), ",")
 }
 
-func NewNumericArrayFromStringWithSeparator[T Numeric](str string, sep string) (result []T) {
-	sArr := strings.Split(strings.TrimSpace(str), sep)
-	result = make([]T, 0, len(sArr))
-	for i, s := range sArr {
+func NewIntArraySpace[T constraints.Integer, S ~string](s S) []T {
+	return NewIntArray[T](string(s), " ")
+}
+
+func NewIntArray[T constraints.Integer, S ~string](s S, sep S) []T {
+	sArr := strings.Split(strings.TrimSpace(string(s)), string(sep))
+	result := make([]T, 0, len(sArr))
+	for _, s := range sArr {
 		var x T
 		if l, err := fmt.Sscanf(s, "%v", &x); err != nil {
 			panic(err)
 		} else {
 			if l == 0 {
-				return
+				return result
 			}
-			result[i] = T(x)
+			result = append(result, T(x))
 		}
 	}
-	return
+	return result
 }
